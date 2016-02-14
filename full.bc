@@ -18,8 +18,6 @@ in context 'shopping'
 		less-than (100)
 	);
 
-	create value 'products' as (index);
-
 	create entity 'cart' (id, member_id) as (identifier, identifier);
 	create entity 'product' (id, quantity) as (identifier, value\quantity);
 
@@ -49,8 +47,8 @@ in context 'shopping' in aggregate 'cart'
 	create command 'remove-product' (cart_id, product_id) as (identifier, identifier);
 
 	create state 'state' (is_created, is_checked_out, cart, products) 
-		as (boolean, boolean, entity\cart, value\products)
-		with defaults (false, false, null, new value\products)
+		as (boolean, boolean, entity\cart, index)
+		with defaults (false, false, null, new index)
 	;
 };
 
