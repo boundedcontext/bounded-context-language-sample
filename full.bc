@@ -1,7 +1,6 @@
-<#
+<# 
 
 create domain 'ecommerce';
-
 create context 'shopping' in 'ecommerce';
 
 in context 'shopping'
@@ -30,15 +29,11 @@ in context 'shopping' in aggregate 'cart'
 	create event 'product-added' (entity\product product);
 	create event 'product-quantity-changed' (entity\product product);
 	create event 'product-removed' (identifier product_id);
+};
 
-	create command 'create' (entity\cart cart);
-	create command 'checkout' (identifier cart_id);
-
-	create command 'add-product' (identifier cart_id, entity\product product);
-	create command 'change-product-quantity' (identifier cart_id, entity\product product);
-	create command 'remove-product' (identifier cart_id, identifier product_id);
-
-	create in-memory-projection 'state' (
+in context 'shopping' in aggregate 'cart'
+{
+	create state 'state' (
 		boolean is_created, 
 		boolean is_checked_out, 
 		entity\cart cart, 
@@ -46,7 +41,7 @@ in context 'shopping' in aggregate 'cart'
 	) defaults ( false, false, null, new value\products);
 };
 
-in context 'shopping' in aggregate 'cart' in in-memory-projection 'state'
+in context 'shopping' in aggregate 'cart' in state 'state'
 {
 	add handler when 'created'
 	{
@@ -80,7 +75,9 @@ in context 'shopping' in aggregate 'cart'
 	{
 		add handler when 'created' event
 		{
-			insert into 'active-carts' (id, member_id) values (cart->id, cart->member_id);
+			insert into 'active-carts' (id, member_id) 
+				values (cart->id, cart->member_id)
+			;
 		};
 
 		add handler when 'checked-out' event
@@ -89,11 +86,103 @@ in context 'shopping' in aggregate 'cart'
 		};
 	};
 
-	create invariant 'has_active_cart' (identifier member_id) satisfied by
+	create invariant 'has_active_cart' (identifier member_id)
 	{
 		cart_count = count from 'active-carts' where id = member_id;
 
 		return cart_count > 0;
+	};
+};
+
+in context 'shopping' in aggregate 'cart'
+{
+	create invariant 'created' (cart\state state)
+	{
+		state->is_created == true;
+	};
+
+	create invariant 'empty' (cart\state state)
+	{
+		state->products->count == 0;
+	};
+
+	create invariant 'full' (cart\state state)
+	{
+		state->products->count >= 10;
+	};
+
+	create invariant 'checked-out' (cart\state state)
+	{
+		state->products->count >= 10;
+	};
+
+	create invariant 'product-exists' (cart\state state, identity product_id)
+	{
+		state->products->exists(product_id);
+	};
+};
+
+in context 'shopping' in aggregate 'cart'
+{
+	create command 'create' (entity\cart cart);
+	create command 'checkout' (identifier cart_id);
+
+	create command 'add-product' (identifier cart_id, entity\product product);
+	create command 'change-product-quantity' (identifier cart_id, entity\product product);
+	create command 'remove-product' (identifier cart_id, identifier product_id);
+);
+
+in context 'shopping' in aggregate 'cart'
+{
+	add handler when 'create' command
+	{
+		assert not invariant\created;
+		assert invariant\has_active_cart (command->cart->member_id);
+
+		apply event\created (command->cart);
+		apply event\empty;
+	};
+
+	add handler when 'checkout' command
+	{
+		assert not invariant\checked-out;
+
+		apply event\checkout;
+	};
+
+	add handler when 'add-product' command
+	{
+		assert not invariant\checked-out;
+		assert not invariant\full;
+		assert not invariant\product-exists ( command->product->id );
+
+		apply event\product-added ( command->product );
+
+		check invariant\full then
+		{
+			apply event\full;
+		};
+	};
+
+	add handler when 'change-product-quantity' command
+	{
+		assert not invariant\checked-out;
+		assert invariant\product-exists ( command->product->id );
+
+		apply event\product-quantity-changed ( command->product );
+	};
+
+	add handler when 'remove-product' command
+	{
+		assert not invariant\checked-out;
+		assert invariant\product-exists ( command->product->id );
+
+		apply event\product-removed ( command->product->id );
+
+		check invariant\empty then
+		{
+			apply event\empty;
+		};
 	};
 };
 
