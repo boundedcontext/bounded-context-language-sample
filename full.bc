@@ -13,16 +13,15 @@ create context 'shopping' in 'ecommerce';
 
 in context 'shopping'
 {
-	add value 'quantity' single
-	{
-		validates 'greater-than' (0);
-		validates 'less-than' (100);
-	};
+	create value 'quantity' single with validators(
+		greater-than(0), 
+		less-than (100)
+	);
 
-	add value 'products' index;
+	create value 'products' index;
 
-	add entity 'cart' (identifier id, identifier member_id);
-	add entity 'product' (identifier id, value\quantity quantity);
+	create entity 'cart' (identifier id, identifier member_id);
+	create entity 'product' (identifier id, value\quantity quantity);
 
 	create aggregate 'cart';
 };
