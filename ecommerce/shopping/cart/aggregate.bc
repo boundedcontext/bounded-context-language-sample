@@ -1,0 +1,23 @@
+<# domain ECommerce\Shopping\Cart\Aggregate;
+
+use Core;
+use Core\ValueObject\Identifier;
+
+create Cart
+{
+	state : {
+		when(<Cart\Event\Created> $event)
+		{
+			$projection->create($event->cart);
+		};
+
+		when(<Cart\Event\CheckedOut> $event)
+		{
+			$projection->checkout($event->id);
+		};
+	};
+	
+};
+
+
+#>

@@ -1,0 +1,9 @@
+<# domain ECommerce\Shopping\Entity;
+
+use Core\ValueObject\Identifier;
+use Ecommerce\Shopping\ValueObject;
+
+create Cart { <Identifier> $id, <Identifier> $member_id };
+create Product { <Identifier> $id, <ValueObject\Quantity> $quantity };
+
+#>
