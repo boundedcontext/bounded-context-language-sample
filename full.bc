@@ -1,43 +1,100 @@
 <#
 
-use Core\Void;
-use Core\Boolean;
-use Core\ValueObject\Identifier;
-use Core\ValueObject\Single;
-use Core\ValueObject\Composite\Index;
+create domain 'ecommerce';
 
-create domain ECommerce;
+create context 'shopping' in 'ecommerce';
 
-create context Shopping 
+in context 'shopping'
 {
-	create value Quantity : Single;
-	create value ProductIndex : Index;
+	add value 'quantity' single
+	{
+		validates 'greater-than' (0);
+		validates 'less-than' (100);
+	};
 
-	create entity Cart { <Identifier> $id, <Identifier> $member_id };
-	create entity Product { <Identifier> $id, <ValueObject\Quantity> $quantity };
+	add value 'products' index;
+
+	add entity 'cart' (identifier id, identifier member_id);
+	add entity 'product' (identifier id, value\quantity quantity);
+
+	create aggregate 'cart';
 };
 
-create aggregate Shopping\Cart
+in context 'shopping' in aggregate 'cart'
 {
-	create event Created;
-	create event Empty;
-	create event Full;
-	create event CheckedOut;
-	create event ProductAdded { <Entity\Product> $product };
-	create event ProductQuantityChanged { <Entity\Product> $product };
-	create event ProductRemoved { <Identifier> $product_id };
+	create event 'created';
+	create event 'empty';
+	create event 'full';
+	create event 'checked-out';
 
-	create command Create { <Entity\Cart> $cart };
-	create command Checkout { <Identifier> $cart_id };
-	create command AddProduct { <Identifier> $cart_id, <Entity\Product> $product };
-	create command ChangeProductQuantity { <Identifier> $cart_id, <Entity\Product> $product };
-	create command RemoveProduct { <Identifier> $cart_id, <Identifier> $product_id };
+	create event 'product-added' (entity\product product);
+	create event 'product-quantity-changed' (entity\product product);
+	create event 'product-removed' (identifier product_id);
+
+	create command 'create' (entity\cart cart);
+	create command 'checkout' (identifier cart_id);
+
+	create command 'add-product' (identifier cart_id, entity\product product);
+	create command 'change-product-quantity' (identifier cart_id, entity\product product);
+	create command 'remove-product' (identifier cart_id, identifier product_id);
+
+	create in-memory-projection 'state' (
+		boolean is_created, 
+		boolean is_checked_out, 
+		entity\cart cart, 
+		value\products products
+	) defaults ( false, false, null, new value\products);
 };
 
-add projection OnlyActiveMemberCart to aggregate Shopping\Cart
+in context 'shopping' in aggregate 'cart' in in-memory-projection 'state'
 {
-	add handler Shopping\Cart\Event\Created;
-	add handler Shopping\Cart\Event\CheckedOut;
+	add handler when 'created'
+	{
+		products->add(event->product);
+	};
+
+	add handler when 'product-added'
+	{
+		products->add(event->product);
+	};
+
+	add handler when 'product-quantity-changed' event
+	{
+		products->replace(event->product);
+	};
+
+	add handler when 'product-removed' event
+	{
+		products->remove(event->product_id);
+	};
+
+	add handler when 'checked-out' event
+	{
+		is_checked_out = true;
+	};
+};
+
+in context 'shopping' in aggregate 'cart'
+{
+	create projection 'active-carts' (identifier id, identifier member_id)
+	{
+		add handler when 'created' event
+		{
+			insert into 'active-carts' (id, member_id) values (cart->id, cart->member_id);
+		};
+
+		add handler when 'checked-out' event
+		{
+			delete from 'active-carts' where 'id' = cart_id;
+		};
+	};
+
+	create invariant 'has_active_cart' (identifier member_id) satisfied by
+	{
+		cart_count = count from 'active-carts' where id = member_id;
+
+		return cart_count > 0;
+	};
 };
 
 #>
