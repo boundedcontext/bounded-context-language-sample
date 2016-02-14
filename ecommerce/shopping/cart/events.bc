@@ -1,26 +1,15 @@
-<# domain ECommerce\Shopping;
+<# domain ECommerce\Shopping\Cart\Event;
 
-use Core\Event;
+use Core;
 use Core\ValueObject\Identifier;
+use ECommerce\Shopping\Entity;
 
-create Event\Created : Event;
-create Event\Empty : Event;
-create Event\Full : Event;
-create Event\CheckedOut : Event;
-
-create Event\ProductAdded : Event
-{
-	<Entity\Product> $product;
-};
-
-create Event\ProductQuantityChanged : Event
-{
-	<Entity\Product> $product;
-};
-
-create Event\ProductRemoved : Event
-{
-	<Identifier> $product_id;
-};
+create Created;
+create Empty;
+create Full;
+create CheckedOut;
+create ProductAdded { <Entity\Product> $product };
+create ProductQuantityChanged { <Entity\Product> $product };
+create ProductRemoved { <Identifier> $product_id };
 
 #>

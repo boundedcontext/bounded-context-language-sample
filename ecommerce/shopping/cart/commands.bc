@@ -1,30 +1,12 @@
-<# domain ECommerce\Shopping;
+<# domain ECommerce\Shopping\Cart\Command;
 
 use Core;
-use Core\Command;
 use Core\ValueObject\Identifier;
+use ECommerce\Shopping\Entity;
 
-create Command\Create : Command
-{
-	<Entity\Cart> $cart;
-};
-
-create Command\AddProduct : Command
-{
-	<Identifier> $cart_id;
-	<Entity\Product> $product;
-};
-
-create Command\ChangeProductQuantity : Command
-{
-	<Identifier> $cart_id;
-	<Entity\Product> $product;
-};
-
-create Command\RemoveProduct : Command
-{
-	<Identifier> $cart_id;
-	<Identifier> $product_id;
-};
+create Create { <Entity\Cart> $cart };
+create AddProduct { <Identifier> $cart_id, <Entity\Product> $product };
+create ChangeProductQuantity { <Identifier> $cart_id, <Entity\Product> $product };
+create RemoveProduct { <Identifier> $cart_id, <Identifier> $product_id };
 
 #>
