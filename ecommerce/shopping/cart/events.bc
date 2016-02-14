@@ -1,8 +1,8 @@
 <# domain ECommerce\Shopping\Cart\Event;
 
-use Core;
 use Core\ValueObject\Identifier;
 use ECommerce\Shopping\Entity;
+
 
 create Created;
 create Empty;

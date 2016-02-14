@@ -1,8 +1,8 @@
 <# domain ECommerce\Shopping\Cart\Command;
 
-use Core;
 use Core\ValueObject\Identifier;
 use ECommerce\Shopping\Entity;
+
 
 create Create { <Entity\Cart> $cart };
 create Checkout { <Identifier> $cart_id };
