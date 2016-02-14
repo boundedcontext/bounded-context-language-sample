@@ -13,7 +13,7 @@ create ProductExists
 	<Identifier> $product_id;
 
 	satisfier : {
-		
+
 	};
 };
 
@@ -22,7 +22,8 @@ create OnlyActiveMemberCart
 	<OnlyActiveMemberCart\Queryable> $queryable;
 	<Identifier> $member_id;
 
-	satisfier : {
+	satisfier()
+	{
 		$queryable->has_active_cart($member_id);
 	};
 };
