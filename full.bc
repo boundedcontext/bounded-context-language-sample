@@ -48,7 +48,7 @@ in context 'shopping' in aggregate 'cart'
 
 	create state 'state' (is_created, is_checked_out, cart, products) 
 		as (boolean, boolean, entity\cart, index)
-		with defaults (false, false, null, new index)
+		defaults (false, false, null, new index)
 	;
 };
 
