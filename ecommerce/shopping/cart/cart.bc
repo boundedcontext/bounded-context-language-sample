@@ -1,9 +1,0 @@
-<# domain ECommerce\Shopping\Cart\Aggregate;
-
-use Core;
-use Core\ValueObject\Identifier;
-
-create Aggregate\Cart;
-
-
-#>

@@ -1,23 +1,41 @@
-<# domain ECommerce\Shopping\Cart\Aggregate;
+<# domain ECommerce\Shopping\Cart;
 
 use Core;
 use Core\ValueObject\Identifier;
+use Core\ValueObject\Boolean;
+use ECommerce\Shopping\Entity;
+use ECommerce\Shopping\ValueObject;
 
-create Cart
+create Aggregate
 {
 	state : {
-		when(<Cart\Event\Created> $event)
+
+		<Boolean> $is_created;
+		<Boolean> $is_checked_out;
+		<Entity\Cart> $cart;
+		<ValueObject\ProductIndex> $products;
+
+		when(<Event\Created> $event)
 		{
-			$projection->create($event->cart);
+			$this->is_created = new Boolean(true);
+			$this->cart = $event->cart;
 		};
 
-		when(<Cart\Event\CheckedOut> $event)
+		when(<Event\CheckedOut> $event)
 		{
 			$projection->checkout($event->id);
 		};
 	};
+
+	handle(<Command\Create> $command)
+	{
+		assert not Created;
+		assert not OnlyActiveMemberCart($command->member_id);
+
+		apply Created($command->cart);
+		apply Empty;
+	};
 	
 };
-
 
 #>
