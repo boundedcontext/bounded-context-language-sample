@@ -1,0 +1,23 @@
+<# domain ECommerce\Shopping;
+
+use Core;
+use Core\Invariant;
+use Core\Identifier\ValueObject;
+
+create Invariant\Created : Invariant;
+create Invariant\Empty : Invariant;
+create Invariant\Full : Invariant;
+
+create Invariant\ProductExists : Invariant
+{
+	assumptions(<Identifier> $product_id);
+};
+
+create Invariant\OnlyActiveMemberCart : Invariant
+{
+	assumptions(<Identifier> $member_id);
+	use(Cart\Projection\OnlyActiveMemberCart);
+};
+
+
+#>

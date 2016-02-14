@@ -1,0 +1,24 @@
+<# domain ECommerce\Shopping;
+
+use Core;
+use Core\Entity;
+use Core\ValueObject\Single;
+use Core\ValueObject\Composite\Index;
+use Core\ValueObject\Identifier;
+
+create ValueObject\Quantity : Single;
+create ValueObject\ProductIndex : Index;
+
+create Entity\Cart : Entity
+{
+	<Identifier> $id;
+	<Identifier> $member_id;
+};
+
+create Entity\Product : Entity
+{
+	<Identifier> $id;
+	<ValueObject\Quantity> $quantity;
+};
+
+#>

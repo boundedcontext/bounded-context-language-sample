@@ -1,0 +1,20 @@
+<# domain ECommerce\Shopping;
+
+use Core;
+use Core\Command;
+use Core\Event;
+use Core\Aggregate;
+use Core\ValueObject\Identifier;
+
+create Aggregate\Cart : Aggregate
+{
+
+};
+
+/*
+add <Identifier> $blah_id to Entity\Cart;
+rename $blah_id to $member_id in Entity\Cart;
+remove $member_id from Entity\Cart;
+*/
+
+#>
