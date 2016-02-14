@@ -33,6 +33,16 @@ in context 'shopping' in aggregate 'cart'
 
 in context 'shopping' in aggregate 'cart'
 {
+	create command 'create' (entity\cart cart);
+	create command 'checkout' (identifier cart_id);
+
+	create command 'add-product' (identifier cart_id, entity\product product);
+	create command 'change-product-quantity' (identifier cart_id, entity\product product);
+	create command 'remove-product' (identifier cart_id, identifier product_id);
+);
+
+in context 'shopping' in aggregate 'cart'
+{
 	create state 'state' (
 		boolean is_created, 
 		boolean is_checked_out, 
@@ -121,16 +131,6 @@ in context 'shopping' in aggregate 'cart'
 		state->products->exists(product_id);
 	};
 };
-
-in context 'shopping' in aggregate 'cart'
-{
-	create command 'create' (entity\cart cart);
-	create command 'checkout' (identifier cart_id);
-
-	create command 'add-product' (identifier cart_id, entity\product product);
-	create command 'change-product-quantity' (identifier cart_id, entity\product product);
-	create command 'remove-product' (identifier cart_id, identifier product_id);
-);
 
 in context 'shopping' in aggregate 'cart'
 {
