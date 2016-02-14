@@ -1,14 +1,14 @@
 <# 
 
 #
-# Domain and Context definitions.
+# Domain and Contexts.
 #
 
 create domain 'ecommerce';
 create context 'shopping' in 'ecommerce';
 
 #
-# Value, Entity and Aggregate definitions.
+# Values, Entities and Aggregates.
 #
 
 in context 'shopping'
@@ -27,7 +27,7 @@ in context 'shopping'
 };
 
 #
-# Event, Command and State definitions.
+# Events and Commands.
 #
 
 in context 'shopping' in aggregate 'cart'
@@ -55,34 +55,24 @@ in context 'shopping' in aggregate 'cart'
 };
 
 #
-# State Event handlers.
+# Projections
 #
 
-in context 'shopping' in aggregate 'cart' in state 'state'
+in context 'shopping' in aggregate 'cart'
 {
-	add handler when event\created
+	create projection 'active-carts' (identifier id, identifier member_id)
 	{
-		is_created = true;
-	};
+		add handler when event\created
+		{
+			insert into 'active-carts' (id, member_id) 
+				values (cart->id, cart->member_id)
+			;
+		};
 
-	add handler when event\product-added
-	{
-		products->add(event->product);
-	};
-
-	add handler when event\product-quantity-changed
-	{
-		products->replace(event->product);
-	};
-
-	add handler when event\product-removed
-	{
-		products->remove(event->product_id);
-	};
-
-	add handler when event\checked-out
-	{
-		is_checked_out = true;
+		add handler when event\checked-out'
+		{
+			delete from 'active-carts' where 'id' = cart_id;
+		};
 	};
 };
 
@@ -116,34 +106,44 @@ in context 'shopping' in aggregate 'cart'
 	{
 		state->products->exists(product_id);
 	};
-};
-
-#
-# A 'has_active_cart' Invariant backed by a projection.
-#
-
-in context 'shopping' in aggregate 'cart'
-{
-	create projection 'active-carts' (identifier id, identifier member_id)
-	{
-		add handler when event\created
-		{
-			insert into 'active-carts' (id, member_id) 
-				values (cart->id, cart->member_id)
-			;
-		};
-
-		add handler when event\checked-out'
-		{
-			delete from 'active-carts' where 'id' = cart_id;
-		};
-	};
 
 	create invariant 'has_active_cart' (identifier member_id)
 	{
 		cart_count = count from 'active-carts' where id = member_id;
 
 		return cart_count > 0;
+	};
+};
+
+#
+# State Event handlers.
+#
+
+in context 'shopping' in aggregate 'cart' in state 'state'
+{
+	add handler when event\created
+	{
+		is_created = true;
+	};
+
+	add handler when event\product-added
+	{
+		products->add(event->product);
+	};
+
+	add handler when event\product-quantity-changed
+	{
+		products->replace(event->product);
+	};
+
+	add handler when event\product-removed
+	{
+		products->remove(event->product_id);
+	};
+
+	add handler when event\checked-out
+	{
+		is_checked_out = true;
 	};
 };
 
