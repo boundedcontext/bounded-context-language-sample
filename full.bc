@@ -58,19 +58,16 @@ in context 'shopping' in aggregate 'cart'
 
 in context 'shopping' in aggregate 'cart'
 {
-	create projection 'active-carts' (identifier cart_id, identifier member_id)
-	{
-		add handler when event\created
-		{
-			insert into 'active-carts' (cart_id, member_id) 
-				values (cart->id, cart->member_id)
-			;
-		};
+	create projection 'active-carts' (cart_id, member_id) as (indentifier, indentifier);
 
-		add handler when event\checked-out'
-		{
-			delete from 'active-carts' where 'cart_id' = cart_id;
-		};
+	add handler (event\created) for (projection\active-carts)
+	{
+		insert (cart_id, member_id) values (event->cart->id, event->cart->member_id);
+	};
+
+	add handler (event\checked-out) for (projection\active-carts)
+	{
+		delete where cart_id = event->id;
 	};
 };
 
@@ -80,36 +77,34 @@ in context 'shopping' in aggregate 'cart'
 
 in context 'shopping' in aggregate 'cart'
 {
-	create invariant 'created' (cart\state state)
+	create invariant 'created' (state) as (cart\state)
 	{
 		state->is_created == true;
 	};
 
-	create invariant 'empty' (cart\state state)
+	create invariant 'empty' (state) as (cart\state)
 	{
 		state->products->count == 0;
 	};
 
-	create invariant 'full' (cart\state state)
+	create invariant 'full' (state) as (cart\state)
 	{
 		state->products->count >= 10;
 	};
 
-	create invariant 'checked-out' (cart\state state)
+	create invariant 'checked-out' (state) as (cart\state)
 	{
 		state->products->count >= 10;
 	};
 
-	create invariant 'product-exists' (cart\state state, identity product_id)
+	create invariant 'product-exists' (state, product_id) as (cart\state, identity)
 	{
 		state->products->exists(product_id);
 	};
 
-	create invariant 'has_active_cart' (identifier member_id)
+	create invariant 'has_active_cart' (active-carts, member_id) as (projection\active-carts, identifier)
 	{
-		cart_count = count from 'active-carts' where id = member_id;
-
-		return cart_count > 0;
+		(count where id = member_id) > 0;
 	};
 };
 
@@ -119,27 +114,27 @@ in context 'shopping' in aggregate 'cart'
 
 in context 'shopping' in aggregate 'cart' in state 'state'
 {
-	add handler when event\created
+	add handler (event\created)
 	{
 		is_created = true;
 	};
 
-	add handler when event\product-added
+	add handler (event\product-added)
 	{
 		products->add(event->product);
 	};
 
-	add handler when event\product-quantity-changed
+	add handler (event\product-quantity-changed)
 	{
 		products->replace(event->product);
 	};
 
-	add handler when event\product-removed
+	add handler (event\product-removed)
 	{
 		products->remove(event->product_id);
 	};
 
-	add handler when event\checked-out
+	add handler (event\checked-out)
 	{
 		is_checked_out = true;
 	};
@@ -151,55 +146,49 @@ in context 'shopping' in aggregate 'cart' in state 'state'
 
 in context 'shopping' in aggregate 'cart'
 {
-	add handler when command\create
+	add handler (command\create)
 	{
-		assert not invariant\created;
-		assert invariant\has_active_cart (command->cart->member_id);
+		assert not (invariant\created);
+		assert (invariant\has_active_cart) with (command->cart->member_id);
 
-		apply event\created (command->cart);
-		apply event\empty;
+		apply event (event\created) with (command->cart);
+		apply event (event\empty);
 	};
 
-	add handler when command\checkout
+	add handler (command\checkout)
 	{
-		assert not invariant\checked-out;
+		assert not (invariant\checked-out);
 
-		apply event\checkout;
+		apply event (event\checkout);
 	};
 
-	add handler when command\add-product
+	add handler (command\add-product)
 	{
-		assert not invariant\checked-out;
-		assert not invariant\full;
-		assert not invariant\product-exists ( command->product->id );
+		assert not (invariant\checked-out);
+		assert not (invariant\full);
+		assert not (invariant\product-exists) with (command->product->id);
 
-		apply event\product-added ( command->product );
+		apply event (event\product-added) with (command->product);
 
-		check invariant\full then
-		{
-			apply event\full;
-		};
+		check (invariant\full) true then apply (event\full);
 	};
 
-	add handler when command\change-product-quantity
+	add handler (command\change-product-quantity)
 	{
-		assert not invariant\checked-out;
-		assert invariant\product-exists ( command->product->id );
+		assert not (invariant\checked-out);
+		assert (invariant\product-exists) with (command->product->id);
 
-		apply event\product-quantity-changed ( command->product );
+		apply event (event\product-quantity-changed) with (command->product);
 	};
 
-	add handler when command\remove-product
+	add handler (command\remove-product)
 	{
-		assert not invariant\checked-out;
-		assert invariant\product-exists ( command->product->id );
+		assert not (invariant\checked-out);
+		assert (invariant\product-exists) with (command->product->id);
 
-		apply event\product-removed ( command->product->id );
+		apply event (event\product-removed) with (command->product->id);
 
-		check invariant\empty then
-		{
-			apply event\empty;
-		};
+		check (invariant\empty) true then apply (event\empty);
 	};
 };
 
