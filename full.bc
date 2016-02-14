@@ -62,12 +62,12 @@ in context 'shopping' in aggregate 'cart'
 
 	add handler (event\created) for (projection\active-carts)
 	{
-		insert (cart_id, member_id) values (event->cart->id, event->cart->member_id);
+		insert into 'active-carts' (cart_id, member_id) values (event->cart->id, event->cart->member_id);
 	};
 
 	add handler (event\checked-out) for (projection\active-carts)
 	{
-		delete where cart_id = event->id;
+		delete from 'active-carts' where cart_id = event->id;
 	};
 };
 
