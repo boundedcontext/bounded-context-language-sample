@@ -27,7 +27,7 @@ in context 'shopping'
 };
 
 #
-# Events and Commands.
+# Events, Commands and State.
 #
 
 in context 'shopping' in aggregate 'cart'
@@ -60,24 +60,24 @@ in context 'shopping' in aggregate 'cart'
 
 in context 'shopping' in aggregate 'cart'
 {
-	create projection 'active-carts' (identifier id, identifier member_id)
+	create projection 'active-carts' (identifier cart_id, identifier member_id)
 	{
 		add handler when event\created
 		{
-			insert into 'active-carts' (id, member_id) 
+			insert into 'active-carts' (cart_id, member_id) 
 				values (cart->id, cart->member_id)
 			;
 		};
 
 		add handler when event\checked-out'
 		{
-			delete from 'active-carts' where 'id' = cart_id;
+			delete from 'active-carts' where 'cart_id' = cart_id;
 		};
 	};
 };
 
 #
-# Invariant definitions.
+# Invariants.
 #
 
 in context 'shopping' in aggregate 'cart'
@@ -116,7 +116,7 @@ in context 'shopping' in aggregate 'cart'
 };
 
 #
-# State Event handlers.
+# State event handlers.
 #
 
 in context 'shopping' in aggregate 'cart' in state 'state'
@@ -148,7 +148,7 @@ in context 'shopping' in aggregate 'cart' in state 'state'
 };
 
 #
-# Aggregate Command handlers.
+# Aggregate command handlers.
 #
 
 in context 'shopping' in aggregate 'cart'
