@@ -1,23 +1,30 @@
-<# domain ECommerce\Shopping;
+<# domain ECommerce\Shopping\Cart\Invariant;
 
 use Core;
-use Core\Invariant;
 use Core\Identifier\ValueObject;
+use Ecommerce\Shopping\Cart\Projection\OnlyActiveMemberCart;
 
-create Invariant\Created : Invariant;
-create Invariant\Empty : Invariant;
-create Invariant\Full : Invariant;
+create Created;
+create Empty;
+create Full;
 
-create Invariant\ProductExists : Invariant
+create ProductExists
 {
-	assumptions(<Identifier> $product_id);
+	<Identifier> $product_id;
+
+	satisfier : {
+		
+	};
 };
 
-create Invariant\OnlyActiveMemberCart : Invariant
+create OnlyActiveMemberCart
 {
-	assumptions(<Identifier> $member_id);
-	use(Cart\Projection\OnlyActiveMemberCart);
-};
+	<OnlyActiveMemberCart\Queryable> $queryable;
+	<Identifier> $member_id;
 
+	satisfier : {
+		$queryable->has_active_cart($member_id);
+	};
+};
 
 #>

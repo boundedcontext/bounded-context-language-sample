@@ -1,34 +1,29 @@
-<# domain ECommerce\Shopping;
+<# domain ECommerce\Shopping\Cart\Projection;
 
 use Core;
 use Core\Void;
 use Core\Boolean;
-use Core\Projection\Projection;
-use Core\Projection\Queryable;
-use Core\Projection\Projector;
 use Core\ValueObject\Identifier;
 
-create Queryable\OnlyActiveMemberCart : Queryable 
+create Projector\OnlyActiveMemberCart 
 {
-	has_active_cart(<Identifier> $member_id) <Boolean>;
-};
+	queryable : {
+		has_active_cart(<Identifier> $member_id) : <Boolean>;
+	};
 
-create Projection\OnlyActiveMemberCart : Projection 
-{
-	create(<Entity\Cart> $cart) <Void>;
-	checkout(<Identifier> $cart_id) <Void>;
-};
-
-create Projector\OnlyActiveMemberCart : Projector 
-{
-	when(<Cart\Event\Created> $event)
-	{
-		Projection\OnlyActiveMemberCart->create($event->cart);
+	projection : {
+		create(<Entity\Cart> $cart) : <Void>;
+		checkout(<Identifier> $cart_id) : <Void>;
 	};
 
 	when(<Cart\Event\Created> $event)
 	{
-		Projection\OnlyActiveMemberCart->checkout($event->id);
+		$projection->create($event->cart);
+	};
+
+	when(<Cart\Event\CheckedOut> $event)
+	{
+		$projection->checkout($event->id);
 	};
 };
 

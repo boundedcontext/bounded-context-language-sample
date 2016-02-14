@@ -8,6 +8,7 @@ create Created;
 create Empty;
 create Full;
 create CheckedOut;
+
 create ProductAdded { <Entity\Product> $product };
 create ProductQuantityChanged { <Entity\Product> $product };
 create ProductRemoved { <Identifier> $product_id };
