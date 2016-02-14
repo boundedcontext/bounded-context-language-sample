@@ -1,0 +1,43 @@
+<#
+
+use Core\Void;
+use Core\Boolean;
+use Core\ValueObject\Identifier;
+use Core\ValueObject\Single;
+use Core\ValueObject\Composite\Index;
+
+create domain ECommerce;
+
+create context Shopping 
+{
+	create value Quantity : Single;
+	create value ProductIndex : Index;
+
+	create entity Cart { <Identifier> $id, <Identifier> $member_id };
+	create entity Product { <Identifier> $id, <ValueObject\Quantity> $quantity };
+};
+
+create aggregate Shopping\Cart
+{
+	create event Created;
+	create event Empty;
+	create event Full;
+	create event CheckedOut;
+	create event ProductAdded { <Entity\Product> $product };
+	create event ProductQuantityChanged { <Entity\Product> $product };
+	create event ProductRemoved { <Identifier> $product_id };
+
+	create command Create { <Entity\Cart> $cart };
+	create command Checkout { <Identifier> $cart_id };
+	create command AddProduct { <Identifier> $cart_id, <Entity\Product> $product };
+	create command ChangeProductQuantity { <Identifier> $cart_id, <Entity\Product> $product };
+	create command RemoveProduct { <Identifier> $cart_id, <Identifier> $product_id };
+};
+
+add projection OnlyActiveMemberCart to aggregate Shopping\Cart
+{
+	add handler Shopping\Cart\Event\Created;
+	add handler Shopping\Cart\Event\CheckedOut;
+};
+
+#>
