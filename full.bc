@@ -13,15 +13,15 @@ create context 'shopping' in 'ecommerce';
 
 in context 'shopping'
 {
-	create value 'quantity' single with validators(
+	create value 'quantity' as (single) with validators (
 		greater-than(0), 
 		less-than (100)
 	);
 
-	create value 'products' index;
+	create value 'products' as (index);
 
-	create entity 'cart' (identifier id, identifier member_id);
-	create entity 'product' (identifier id, value\quantity quantity);
+	create entity 'cart' (id, member_id) as (identifier, identifier);
+	create entity 'product' (id, quantity) as (identifier, value\quantity);
 
 	create aggregate 'cart';
 };
@@ -37,23 +37,21 @@ in context 'shopping' in aggregate 'cart'
 	create event 'full';
 	create event 'checked-out';
 
-	create event 'product-added' (entity\product product);
-	create event 'product-quantity-changed' (entity\product product);
-	create event 'product-removed' (identifier product_id);
+	create event 'product-added' (product) as (entity\product);
+	create event 'product-quantity-changed' (product) as (entity\product);
+	create event 'product-removed' (product_id) as (identifier);
 
-	create command 'create' (entity\cart cart);
-	create command 'checkout' (identifier cart_id);
+	create command 'create' (cart) as (entity\cart);
+	create command 'checkout' (cart_id) as (identifier);
 
-	create command 'add-product' (identifier cart_id, entity\product product);
-	create command 'change-product-quantity' (identifier cart_id, entity\product product);
-	create command 'remove-product' (identifier cart_id, identifier product_id);
+	create command 'add-product' (cart_id, product) as (identifier, entity\product);
+	create command 'change-product-quantity' (cart_id, product) as (identifier, entity\product);
+	create command 'remove-product' (cart_id, product_id) as (identifier, identifier);
 
-	create state 'state' (
-		boolean is_created, 
-		boolean is_checked_out, 
-		entity\cart cart, 
-		value\products products
-	) defaults ( false, false, null, new value\products);
+	create state 'state' (is_created, is_checked_out, cart, products) 
+		as (boolean, boolean, entity\cart, value\products)
+		with defaults (false, false, null, new value\products)
+	;
 };
 
 #
