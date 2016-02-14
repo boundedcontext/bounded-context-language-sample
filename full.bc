@@ -65,7 +65,7 @@ in context 'shopping' in aggregate 'cart' in state 'state'
 {
 	add handler when 'created'
 	{
-		products->add(event->product);
+		is_created = true;
 	};
 
 	add handler when 'product-added'
