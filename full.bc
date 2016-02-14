@@ -1,7 +1,15 @@
 <# 
 
+#
+# Domain and Context definitions.
+#
+
 create domain 'ecommerce';
 create context 'shopping' in 'ecommerce';
+
+#
+# Value, Entity and Aggregate definitions.
+#
 
 in context 'shopping'
 {
@@ -18,6 +26,10 @@ in context 'shopping'
 
 	create aggregate 'cart';
 };
+
+#
+# Event, Command and State definitions.
+#
 
 in context 'shopping' in aggregate 'cart'
 {
@@ -44,6 +56,10 @@ in context 'shopping' in aggregate 'cart'
 		value\products products
 	) defaults ( false, false, null, new value\products);
 };
+
+#
+# State Event handlers.
+#
 
 in context 'shopping' in aggregate 'cart' in state 'state'
 {
@@ -73,30 +89,9 @@ in context 'shopping' in aggregate 'cart' in state 'state'
 	};
 };
 
-in context 'shopping' in aggregate 'cart'
-{
-	create projection 'active-carts' (identifier id, identifier member_id)
-	{
-		add handler when 'created' event
-		{
-			insert into 'active-carts' (id, member_id) 
-				values (cart->id, cart->member_id)
-			;
-		};
-
-		add handler when 'checked-out' event
-		{
-			delete from 'active-carts' where 'id' = cart_id;
-		};
-	};
-
-	create invariant 'has_active_cart' (identifier member_id)
-	{
-		cart_count = count from 'active-carts' where id = member_id;
-
-		return cart_count > 0;
-	};
-};
+#
+# Invariant definitions.
+#
 
 in context 'shopping' in aggregate 'cart'
 {
@@ -125,6 +120,39 @@ in context 'shopping' in aggregate 'cart'
 		state->products->exists(product_id);
 	};
 };
+
+#
+# A 'has_active_cart' Invariant backed by a projection.
+#
+
+in context 'shopping' in aggregate 'cart'
+{
+	create projection 'active-carts' (identifier id, identifier member_id)
+	{
+		add handler when 'created' event
+		{
+			insert into 'active-carts' (id, member_id) 
+				values (cart->id, cart->member_id)
+			;
+		};
+
+		add handler when 'checked-out' event
+		{
+			delete from 'active-carts' where 'id' = cart_id;
+		};
+	};
+
+	create invariant 'has_active_cart' (identifier member_id)
+	{
+		cart_count = count from 'active-carts' where id = member_id;
+
+		return cart_count > 0;
+	};
+};
+
+#
+# Aggregate Command handlers.
+#
 
 in context 'shopping' in aggregate 'cart'
 {
