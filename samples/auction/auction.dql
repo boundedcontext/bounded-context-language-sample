@@ -1,0 +1,175 @@
+<# in context 'listing';
+
+create value 'money' as (single);
+
+#
+# Seller
+#
+
+create aggregate 'seller';
+
+#
+# Seller Events
+#
+
+create event 'created' (seller_id, can_list)
+	as (identifier, entity\seller)
+	for 'seller'
+;
+
+create event 'listing-permissions-changed' (seller_id, can_list) 
+	as (identifier, boolean)
+	for 'seller'
+;
+
+#
+# Seller State
+#
+
+create state 'state' (seller_id, can_list)
+	as (identifier, entity\seller)
+	defaults (null, false)
+	for 'seller'
+;
+
+add handler (event\created) as ({
+
+	seller_id = event.seller_id;
+	can_list = event.can_list;
+
+}) to 'state' for 'seller';
+
+add handler (event\listing-permissions-changed) as ({
+
+	can_list = event.can_list;
+	
+}) to 'state' for 'seller';
+
+#
+# Seller Commands
+#
+
+create command 'create' 
+	(seller_id, can_list), 
+	as (identifier, entity\seller)
+	for 'seller'
+;
+
+create command 'change-listing-permission' 
+	(seller_id, can_list) 
+	as (identifier, boolean)
+	for 'seller'
+;
+
+#
+# Seller Handlers
+#
+
+add handler (command\create) as ({
+
+	apply event (event\created) with (command.seller_id, command.can_list);
+
+}) to 'state' for 'seller';
+
+add handler (command\create) as ({
+
+	apply event (change-listing-permission) with (command.seller_id, command.can_list);
+	
+}) to 'state' for 'seller';
+
+#
+# Listing
+#
+
+create aggregate 'listing';
+
+# [ground, air, overnight]
+create value 'shipping-method' 
+	as (single)
+; 
+
+# [cash, cheque, credit card, paypal]
+create value 'payment-method' 
+	as (single)
+; 
+
+create entity 'listing' (id, seller_id) 
+	as (identifier, identifier)
+;
+
+create event 'created' (listing, payment_methods, shipping_methods) 
+	as (
+		entity\listing, 
+		collection\unique[payment-method], 
+		collection\unique[shipping-method]
+	)
+	for 'listing'
+;
+
+create event 'closed' for 'listing';
+
+create state 'state' (listing, payment_methods, shipping_methods) 
+	as (
+		entity\listing, 
+		collection\unique[payment-method], 
+		collection\unique[shipping-method]
+	)
+	defaults (null, new collection\unique, new collection\unique)
+	for 'listing'
+;
+
+add handler (event\created) as ({
+	
+	listing = event.listing;
+	payment_methods = event.payment_methods;
+	shipping_methods = event.shipping_methods;
+
+}) to 'state' for 'listing';
+
+
+in aggregate 'listing' :
+{
+	create command 'create' (listing, payment_methods, shipping_methods) 
+		as (
+			entity\listing, 
+			collection\unique[payment-method], 
+			collection\unique[shipping-method]
+		)
+	;
+
+	add handler (command\created)
+	{
+		apply event (event\created) with (command.listing, command.payment_methods, command.shipping_methods);
+	};
+};
+
+
+#
+# Question
+#
+
+create aggregate 'question';
+
+#
+# Auction
+#
+
+create aggregate 'auction';
+
+create entity 'auction' (id, listing_id, starting_price, ends_at)
+	as (identifier, identifier, value\money, datetime)
+;
+
+#
+# Bid
+#
+
+create aggregate 'bid';
+
+create value 'bid' (bidder_id, current_bid, maximum_bid) as 
+	(identifier, value\money, value\money)
+;
+
+
+
+#>
