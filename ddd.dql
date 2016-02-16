@@ -1,0 +1,88 @@
+
+
+create domain 'domain';
+
+create context 'bounded-context';
+
+rename context 'bounded-context' to 'context';
+
+create value 'domain-name' in context 'context';
+
+create validator 'alpha-numeric' in context 'context' as ({
+	regex ('/[A-Za-z0-9_-]+/');
+});
+
+update value 'domain-name' set validator (validator\alpha-numeric) in context 'context';
+
+create value 'context-name' in context 'context';
+
+update value 'context-name' set validator (validator\alpha-numeric) in context 'context';
+
+create entity 'domain' (id, name) as (identifier, value\domain-name) in context 'context';
+
+create entity 'context' (id, name) as (identifier, value\context-name) in context 'context';
+
+create aggregate 'domain' in context 'context';
+
+create event 'created' (domain) as (entity\domain) for aggregate 'domain' in context 'context';
+
+create command 'create' (domain) as (entity\domain) for aggregate 'domain' in context 'context';
+
+delete event 'created' for aggregate 'domain' in context 'context';
+delete command 'create' for aggregate 'domain' in context 'context';
+
+create event 'created' for aggregate 'domain' in context 'context';
+
+rename aggregate 'domain' to 'environment' in context 'context';
+
+create event 'domain-created' (domain) as (entity\domain) for aggregate 'environment' in context 'context';
+
+create event 'domain-renamed' (domain) as (entity\domain) for aggregate 'environment' in context 'context';
+
+create event 'domain-deleted' (domain_id) as (identifier) for aggregate 'environment' in context 'context';
+
+create command 'create' for aggregate 'environment' in context 'context';
+create command 'domain-create' (domain) as (entity\domain) for aggregate 'environment' in context 'context';
+create command 'domain-rename' (domain) as (entity\domain) for aggregate 'environment' in context 'context';
+create command 'domain-delete' (domain_id) as (identifier) for aggregate 'environment' in context 'context';
+
+create state 'state' (id, domains) for 'environment' in context 'context'
+	as (identifier, index <entity\domain>)
+	defaults (null, empty)	
+;
+
+add handler (event\created) to 'state' for 'environment' in context 'context' as ({
+	set id = event.id; 
+});
+
+add handler (event\domain-create) to 'state' for 'environment' in context 'context' as ({
+	add to domains (event.domain);
+});
+
+add handler (event\domain-rename) to 'state' for 'environment' in context 'context' as ({
+	replace in domains (event.domain);
+});
+
+add handler (event\domain-delete) to 'state' for 'environment' in context 'context' as ({
+	delete from domains (event.domain_id);
+});
+
+create invariant 'name-exists' (state, name) as (environment\state, value\domain-name)
+	for 'environment' 
+	in context 'context'
+	satisfies 
+({
+	#map (state.domains) reduce (domain.name) 
+	#_.matches(state.domains, function (domain) { return domain.name == name });
+	#(select count(*) from 'state'.'domains' where name = name) > 0;
+});
+
+
+
+
+
+
+
+
+
+
