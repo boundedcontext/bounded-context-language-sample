@@ -38,7 +38,7 @@ in context 'accounts' for aggregate 'organisations' :
 		)
 	);
 
-	command 'change-plan' (organisation_id, plan_id) as (
+	command 'change-plan' (id, plan_id) as (
 		'73253024-6b20-4ce9-a1a4-1d06fc79f973',
 		'b87f2b2e-9e88-4b9b-90ac-421a8fa7a43c'
 	);
@@ -48,13 +48,13 @@ in context 'accounts' for aggregate 'organisations' :
 
 in context 'accounts' for aggregate 'members' :
 {
-	command 'invite' (member_id, organisation_id, invite_code) as (
+	command 'invite' (id, organisation_id, invite_code) as (
 		'ec12b667-420a-44fb-9973-7452449cf5a5',
 		'73253024-6b20-4ce9-a1a4-1d06fc79f973',
 		'AXN-3FD'
 	);
 
-	command 'register' (member_id, profile) as (
+	command 'register' (id, profile) as (
 		'ec12b667-420a-44fb-9973-7452449cf5a5',
 		create value\profile (first_name, last_name, email, mobile_number) as (
 			'Colin',
@@ -70,7 +70,7 @@ in context 'accounts' for aggregate 'members' :
 
 in context 'accounts' for aggregate 'members' :
 {
-	command 'create' (member_id, profile) as (
+	command 'create' (id, profile) as (
 		'e8a3da8f-2f47-4e8a-ac8d-e97d4c88c534',
 		create value\profile (first_name, last_name, email, mobile_number) as (
 			'Bill',
@@ -85,7 +85,7 @@ in context 'accounts' for aggregate 'members' :
 
 in context 'accounts' for aggregate 'organisations' :
 {
-	command 'change-plan' (organisation_id, plan_id) as (
+	command 'change-plan' (id, plan_id) as (
 		'73253024-6b20-4ce9-a1a4-1d06fc79f973',
 		'177350ff-c480-4022-8b78-7f486c9ba5b5'
 	);
@@ -96,7 +96,7 @@ in context 'accounts' for aggregate 'organisations' :
 
 in context 'accounts' for aggregate 'members' :
 {
-	command 'create' (member_id, profile) as (
+	command 'create' (id, profile) as (
 		'e8a3da8f-2f47-4e8a-ac8d-e97d4c88c534',
 		create value\profile (first_name, last_name, email, mobile_number) as (
 			'Bill',
