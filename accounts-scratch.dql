@@ -1,13 +1,14 @@
 
 use environment 'sample-environment';
 
-# Define the Plans
+# Create a Plans aggregate with the current environment id and add two plans to it.
 
 in context 'accounts' for aggregate 'plans' :
 {
 	command 'create' (id) as (environment\id);
 
-	command 'add' (plan) as (
+	command 'add' (id, plan) as (
+		environment\id,
 		create entity\plan (id, name, member_count) as (
 			'b87f2b2e-9e88-4b9b-90ac-421a8fa7a43c', 
 			'Single', 
@@ -15,7 +16,8 @@ in context 'accounts' for aggregate 'plans' :
 		)
 	);
 
-	command 'add' (plan) as (
+	command 'add' (id, plan) as (
+		environment\id,
 		create entity\plan (id, name, member_count) as (
 			'177350ff-c480-4022-8b78-7f486c9ba5b5', 
 			'Small', 
@@ -24,73 +26,86 @@ in context 'accounts' for aggregate 'plans' :
 	);
 };
 
-# Create an Organisation
+# Create an Organisation and put it on the "Single" plan.
 
-command 'create' (organisation) for 'organisations' in context 'accounts' as (
-	create entity\organisation (id, public_id, name) as (
+in context 'accounts' for aggregate 'organisations' :
+{
+	command 'create' (id, organisation) as (
 		'73253024-6b20-4ce9-a1a4-1d06fc79f973',
-		'TEST-ORGANISATION',
-		'Test Organisation Name'
-	)
-);
+		create value\organisation (public_id, name) as (
+			'TEST-ORGANISATION',
+			'Test Organisation Name'
+		)
+	);
 
-# Put it on the "Single" plan.
+	command 'change-plan' (organisation_id, plan_id) as (
+		'73253024-6b20-4ce9-a1a4-1d06fc79f973',
+		'b87f2b2e-9e88-4b9b-90ac-421a8fa7a43c'
+	);
+};
 
-command 'change-plan' (organisation_id, plan_id) for 'organisations' in context 'accounts' as (
-	'73253024-6b20-4ce9-a1a4-1d06fc79f973',
-	'b87f2b2e-9e88-4b9b-90ac-421a8fa7a43c'
-);
+# Invite a new Member to the organisation and register the invite.
 
-# Invite a new Member to Organisation.
+in context 'accounts' for aggregate 'members' :
+{
+	command 'invite' (member_id, organisation_id, invite_code) as (
+		'ec12b667-420a-44fb-9973-7452449cf5a5',
+		'73253024-6b20-4ce9-a1a4-1d06fc79f973',
+		'AXN-3FD'
+	);
 
-command 'invite' (member_id, organisation_id, invite_code) for 'members' in context 'accounts' as (
-	'ec12b667-420a-44fb-9973-7452449cf5a5',
-	'73253024-6b20-4ce9-a1a4-1d06fc79f973',
-	'AXN-3FD'
-);
+	command 'register' (member_id, profile) as (
+		'ec12b667-420a-44fb-9973-7452449cf5a5',
+		create value\profile (first_name, last_name, email, mobile_number) as (
+			'Colin',
+			'Lyons',
+			'colin@tercet.io',
+			'+353851561971'
+		)
+	);
+};
 
-# Register the Member
+# Attempt to create another Member.
+# This will fail because the 'plan-has-enough-free' invariant asserts.
 
-command 'register' (member_id, profile) for 'members' in context 'accounts' as (
-	'ec12b667-420a-44fb-9973-7452449cf5a5',
-	create value\profile (first_name, last_name, email, mobile_number) as (
-		'Colin',
-		'Lyons',
-		'colin@tercet.io',
-		'+353851561971'
-	)
-);
+in context 'accounts' for aggregate 'members' :
+{
+	command 'create' (member_id, profile) as (
+		'e8a3da8f-2f47-4e8a-ac8d-e97d4c88c534',
+		create value\profile (first_name, last_name, email, mobile_number) as (
+			'Bill',
+			'Philson',
+			'bill@tercet.io',
+			'+353851234567'
+		)
+	);
+};
 
-# Attempt to create another Member, THIS WILL FAIL 'plan-has-enough-free' invariant.
+# Change the organisation over to the "Small" plan, so they can add more members.
 
-command 'create' (member_id, profile) for 'members' in context 'accounts' as (
-	'e8a3da8f-2f47-4e8a-ac8d-e97d4c88c534',
-	create value\profile (first_name, last_name, email, mobile_number) as (
-		'Bill',
-		'Philson',
-		'bill@tercet.io',
-		'+353851234567'
-	)
-);
-
-# Put it on the "Small" plan.
-
-command 'change-plan' (organisation_id, plan_id) for 'organisations' in context 'accounts' as (
-	'73253024-6b20-4ce9-a1a4-1d06fc79f973',
-	'177350ff-c480-4022-8b78-7f486c9ba5b5'
-);
+in context 'accounts' for aggregate 'organisations' :
+{
+	command 'change-plan' (organisation_id, plan_id) as (
+		'73253024-6b20-4ce9-a1a4-1d06fc79f973',
+		'177350ff-c480-4022-8b78-7f486c9ba5b5'
+	);
+};
 
 # Attempt to create the Member again.
+# This will success now that the organisation is on a bigger plan.
 
-command 'create' (member_id, profile) for 'members' in context 'accounts' as (
-	'e8a3da8f-2f47-4e8a-ac8d-e97d4c88c534',
-	create value\profile (first_name, last_name, email, mobile_number) as (
-		'Bill',
-		'Philson',
-		'bill@tercet.io',
-		'+353851234567'
-	)
-);
+in context 'accounts' for aggregate 'members' :
+{
+	command 'create' (member_id, profile) as (
+		'e8a3da8f-2f47-4e8a-ac8d-e97d4c88c534',
+		create value\profile (first_name, last_name, email, mobile_number) as (
+			'Bill',
+			'Philson',
+			'bill@tercet.io',
+			'+353851234567'
+		)
+	);
+};
 
 
 
