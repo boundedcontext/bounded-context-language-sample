@@ -13,7 +13,7 @@ create aggregate 'seller';
 #
 
 create event 'created' (seller_id, can_list)
-	as (identifier, entity\seller)
+	as (identifier, boolean)
 	for 'seller'
 ;
 
@@ -27,7 +27,7 @@ create event 'listing-permissions-changed' (seller_id, can_list)
 #
 
 create state 'state' (seller_id, can_list)
-	as (identifier, entity\seller)
+	as (identifier, boolean)
 	defaults (null, false)
 	for 'seller'
 ;

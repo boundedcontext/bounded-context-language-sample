@@ -1,0 +1,96 @@
+
+use environment 'sample-environment';
+
+# Define the Plans
+
+in context 'accounts' for aggregate 'plans' :
+{
+	command 'create' (id) as (environment\id);
+
+	command 'add' (plan) as (
+		create entity\plan (id, name, member_count) as (
+			'b87f2b2e-9e88-4b9b-90ac-421a8fa7a43c', 
+			'Single', 
+			1
+		)
+	);
+
+	command 'add' (plan) as (
+		create entity\plan (id, name, member_count) as (
+			'177350ff-c480-4022-8b78-7f486c9ba5b5', 
+			'Small', 
+			10
+		)
+	);
+};
+
+# Create an Organisation
+
+command 'create' (organisation) for 'organisations' in context 'accounts' as (
+	create entity\organisation (id, public_id, name) as (
+		'73253024-6b20-4ce9-a1a4-1d06fc79f973',
+		'TEST-ORGANISATION',
+		'Test Organisation Name'
+	)
+);
+
+# Put it on the "Single" plan.
+
+command 'change-plan' (organisation_id, plan_id) for 'organisations' in context 'accounts' as (
+	'73253024-6b20-4ce9-a1a4-1d06fc79f973',
+	'b87f2b2e-9e88-4b9b-90ac-421a8fa7a43c'
+);
+
+# Invite a new Member to Organisation.
+
+command 'invite' (member_id, organisation_id, invite_code) for 'members' in context 'accounts' as (
+	'ec12b667-420a-44fb-9973-7452449cf5a5',
+	'73253024-6b20-4ce9-a1a4-1d06fc79f973',
+	'AXN-3FD'
+);
+
+# Register the Member
+
+command 'register' (member_id, profile) for 'members' in context 'accounts' as (
+	'ec12b667-420a-44fb-9973-7452449cf5a5',
+	create value\profile (first_name, last_name, email, mobile_number) as (
+		'Colin',
+		'Lyons',
+		'colin@tercet.io',
+		'+353851561971'
+	)
+);
+
+# Attempt to create another Member, THIS WILL FAIL 'plan-has-enough-free' invariant.
+
+command 'create' (member_id, profile) for 'members' in context 'accounts' as (
+	'e8a3da8f-2f47-4e8a-ac8d-e97d4c88c534',
+	create value\profile (first_name, last_name, email, mobile_number) as (
+		'Bill',
+		'Philson',
+		'bill@tercet.io',
+		'+353851234567'
+	)
+);
+
+# Put it on the "Small" plan.
+
+command 'change-plan' (organisation_id, plan_id) for 'organisations' in context 'accounts' as (
+	'73253024-6b20-4ce9-a1a4-1d06fc79f973',
+	'177350ff-c480-4022-8b78-7f486c9ba5b5'
+);
+
+# Attempt to create the Member again.
+
+command 'create' (member_id, profile) for 'members' in context 'accounts' as (
+	'e8a3da8f-2f47-4e8a-ac8d-e97d4c88c534',
+	create value\profile (first_name, last_name, email, mobile_number) as (
+		'Bill',
+		'Philson',
+		'bill@tercet.io',
+		'+353851234567'
+	)
+);
+
+
+
