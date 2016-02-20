@@ -15,9 +15,13 @@ To create a new environment, simply run the following command:
 
 	create environment 'release-0.8.12';
 
-### Cloning a new environment from an existing environment
+### Cloning an environment
+
+Sometimes, you might want to make changes to the domains in an environment, but preserve the existing one. For this, we've included the ability to clone a new environment from an existing one. You can do this by running:
 
 	clone environment 'release-0.8.13' from 'release-0.8.12';
+
+There are cases where you're interested in cloning the command and event logs.
 
 	clone environment 'release-0.8.13' from 'release-0.8.12' with logs;
 
