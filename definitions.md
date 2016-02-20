@@ -29,7 +29,7 @@ If you're unhappy with the name of the current environment, you can rename it at
 
 ### Resetting an existing environment
 
-Sometimes you want to reset all of the log data for an environment without affecting the current schema. This is useful when running unit and acceptance test cases on your environment. You can do this by running the following statement:
+Sometimes you want to reset all of the command and event log data for an environment without affecting the current schema. This is particularly useful when running unit and acceptance test cases on your environment. You can do this by running the following statement:
 
 	reset environment 'release-0.8.13';
 
@@ -45,7 +45,7 @@ At any time, the domain schemas for an environment can be dumped back over your 
 
 	dump environment 'release-0.8.13';
 
-Aswell, you can optionally include all of the command and event log data by specifying the following statement:
+You can optionally include all of the command and event log data by specifying the _with logs_ modifier. You can do this with the following statement:
 
 	dump environment 'release-0.8.13' with logs;
 
@@ -55,7 +55,7 @@ If working on a local server, the contents of the environment can be dumped dire
 
 ### Delete an existing environment
 
-If you no longer need an environment, you can delete it from your server. Keep in mind, that this will render all domain schemas, command and event logs irretrievable. This can be done with the following statement:
+If you no longer need an environment, you can delete it from your server. Keep in mind, that this **will render all domain schemas, command and event logs irretrievable**. This can be done with the following statement:
 
 	delete environment 'release-0.8.13';
 
