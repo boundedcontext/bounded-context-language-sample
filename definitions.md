@@ -13,7 +13,7 @@ To create a new environment, simply run the following statement:
 
 ### Cloning an environment
 
-Sometimes, you might want to make changes to your domain schemas, but preserve the existing ones. For this, we've included the ability to clone a new environment from an existing one. You can do this by running the following statement:
+Sometimes, you might want to make changes to your domain schemas, but preserve the ones existing in your current environment. For this, you can clone a new environment from an existing one. You can do this by running the following statement:
 
 	clone environment 'release-0.8.13' from 'release-0.8.12';
 
