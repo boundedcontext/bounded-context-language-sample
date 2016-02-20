@@ -9,28 +9,27 @@ A dump can contain the domain schemas, with or without the logs, for easy transp
 
 It may represent a particular release, a new branch of an existing environment, or just a sandbox.
 
-
-### Create a new environment
+### Creating an environment
 
 To create a new environment, simply run the following command:
 
 	create environment 'release-0.8.12';
 
-### Cloning a new environment an existing environment
+### Cloning a new environment from an existing environment
 
 	clone environment 'release-0.8.13' from 'release-0.8.12';
 
 	clone environment 'release-0.8.13' from 'release-0.8.12' with logs;
 
-### Rename an existing environment
+### Renaming an environment
 
 	rename environment 'release-0.8.12' to 'release-0.8.13';
 
-### Reset an existing environment
+### Resetting an existing environment
 
 	reset environment 'release-0.8.13';
 
-### Use an environment
+### Using an environment
 
 	use environment 'release-0.8.13';
 
