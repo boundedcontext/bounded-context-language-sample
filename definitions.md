@@ -1,15 +1,25 @@
 
---------------------
 Environments
 --------------------
 
-An environment is its own universe.
+Environments are their own universe. They contain the schemas of domains and keep a log of all commands issued to the environment, including the commands resulting events.
 
-It may be for a particular release, or just a sandbox environment for playing around with one or more domains. It keeps log data for what has happened (events and commands) to its domains.
+It is where domains are imported, modelled, reshaped, and tested. An environment can be dumped directly back to the user over the network, or directly into a DQL file.
+
+A dump can contain the domain schemas, with or without the logs, for easy transport to other systems.
+
+It may represent a particular release, a new branch of an existing environment, or just a sandbox.
+
 
 Create a new environment
 
 	create environment 'release-0.8.12';
+
+Cloning an existing environment
+
+	clone environment 'release-0.8.13' from 'release-0.8.12';
+
+	clone environment 'release-0.8.13' from 'release-0.8.12' with logs;
 
 Rename an existing environment
 
@@ -22,6 +32,10 @@ Reset an existing environment
 Use an environment
 
 	use environment 'release-0.8.13';
+
+Dumping an environment
+
+	dump environment 'release-0.8.13' to file '/tmp/release-0.8.13.dql' with logs;
 
 Delete an existing environment
 
