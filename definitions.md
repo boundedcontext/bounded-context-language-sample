@@ -3,7 +3,7 @@
 
 Environments are their own universe. They contain all of the current domain schemas and keep a log of all commands issued to the environment, and all resulting events from those commands.
 
-This is where domain schemas are created, imported, reshaped, and tested. It may represent a particular release, a new clone of an existing environment, or just a new sandbox to playing around with a domain.
+This is where domain schemas are created, imported, reshaped, and tested. It may represent a particular release, a new clone of an existing environment, or just a new sandbox for playing around with a domain.
 
 ### Creating an environment
 
