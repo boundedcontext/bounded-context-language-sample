@@ -12,34 +12,41 @@ It may represent a particular release, a new branch of an existing environment, 
 
 
 Create a new environment
+===
 
-	To create a new environment, simply run the following command:
+To create a new environment, simply run the following command:
 
 	create environment 'release-0.8.12';
 
 Cloning a new environment an existing environment
+===
 
 	clone environment 'release-0.8.13' from 'release-0.8.12';
 
 	clone environment 'release-0.8.13' from 'release-0.8.12' with logs;
 
 Rename an existing environment
+===
 
 	rename environment 'release-0.8.12' to 'release-0.8.13';
 
 Reset an existing environment
+===
 
 	reset environment 'release-0.8.13';
 
 Use an environment
+===
 
 	use environment 'release-0.8.13';
 
 Dumping an environment
+===
 
 	dump environment 'release-0.8.13' to file '/tmp/release-0.8.13.dql' with logs;
 
 Delete an existing environment
+===
 
 	delete environment 'release-0.8.13';
 
