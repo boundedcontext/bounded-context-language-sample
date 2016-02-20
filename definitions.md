@@ -1,13 +1,9 @@
 
 # Environments
 
-Environments are their own universe. They contain the schemas of domains and keep a log of all commands issued to the environment, including the commands resulting events.
+Environments are their own universe. They contain all of the current domain schemas and keep a log of all commands issued to the environment, including all events that have been created from commands run against the environment.
 
-It is where domains are imported, modelled, reshaped, and tested. An environment can be dumped directly back to the user over the network, or directly into a DQL file.
-
-A dump can contain the domain schemas, with or without the logs, for easy transport to other systems.
-
-It may represent a particular release, a new branch of an existing environment, or just a sandbox.
+They are where domain schemas are created, imported, reshaped, and tested. It may represent a particular release, a new branch of an existing environment, or just a sandbox.
 
 ### Creating an environment
 
@@ -27,7 +23,7 @@ If you would like to clone an environment, including all of the log data, you ca
 
 ### Renaming an environment
 
-If you're unhappy with the name of the current environment, you can rename is at any time with the following command:
+If you're unhappy with the name of the current environment, you can rename it at any time with the following command:
 
 	rename environment 'release-0.8.12' to 'release-0.8.13';
 
@@ -39,11 +35,23 @@ Sometimes you want to reset all of the log data for an environment without affec
 
 ### Using an environment
 
+You will be working mostly within a single environment at a time. To save time writing statements, you can include the _use_ statement at the beginning of a session so that it doesn't need to be included in any following statements.
+
 	use environment 'release-0.8.13';
 
 ### Dumping an environment
 
-	dump environment 'release-0.8.13' to file '/tmp/release-0.8.13.dql' with logs;
+At any time, an environment can be dumped directly back to you over your connection to the server. A dump can contain the domain schemas, with or without the logs, for easy transport to other systems.
+
+	dump environment 'release-0.8.13';
+
+You can optionally include all of the command and event log data by specifying the following:
+
+	dump environment 'release-0.8.13' with logs;
+
+If working on a local server, the contents of the environment can be dumped directly into a DQL file by specifying a file path.
+
+	dump environment 'release-0.8.13' to file '/tmp/release-0.8.13.dql';
 
 ### Delete an existing environment
 
