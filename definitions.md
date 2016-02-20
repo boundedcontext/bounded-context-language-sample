@@ -1,6 +1,6 @@
 
 Environments
---------------------
+=
 
 Environments are their own universe. They contain the schemas of domains and keep a log of all commands issued to the environment, including the commands resulting events.
 
@@ -13,9 +13,11 @@ It may represent a particular release, a new branch of an existing environment, 
 
 Create a new environment
 
+	To create a new environment, simply run the following command:
+
 	create environment 'release-0.8.12';
 
-Cloning an existing environment
+Cloning a new environment an existing environment
 
 	clone environment 'release-0.8.13' from 'release-0.8.12';
 
@@ -42,9 +44,8 @@ Delete an existing environment
 	delete environment 'release-0.8.13';
 
 
---------------------
 Domains
---------------------
+=
 
 A domain organises contexts.
 
@@ -82,9 +83,8 @@ Delete an existing domain
 	delete domain 'learning';
 
 
---------------------
 Contexts
---------------------
+=
 
 Create a new context
 
