@@ -17,19 +17,23 @@ To create a new environment, simply run the following command:
 
 ### Cloning an environment
 
-Sometimes, you might want to make changes to the domains in an environment, but preserve the existing one. For this, we've included the ability to clone a new environment from an existing one. You can do this by running:
+Sometimes, you might want to make changes to your domain schemas, but preserve the existing ones. For this, we've included the ability to clone a new environment from an existing one. You can do this by running:
 
 	clone environment 'release-0.8.13' from 'release-0.8.12';
 
-There are cases where you're interested in cloning the command and event logs.
+If you would like to clone an environment, including all of the log data, you can run:
 
 	clone environment 'release-0.8.13' from 'release-0.8.12' with logs;
 
 ### Renaming an environment
 
+If you're unhappy with the name of the current environment, you can rename is at any time with the following command:
+
 	rename environment 'release-0.8.12' to 'release-0.8.13';
 
 ### Resetting an existing environment
+
+Sometimes you want to reset all of the log data for an environment without affecting the current schema. This is useful when running unit and acceptance test cases. You can do this by running the follwing:
 
 	reset environment 'release-0.8.13';
 
