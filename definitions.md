@@ -41,11 +41,11 @@ You will be working mostly within a single environment at a time. To save time w
 
 ### Dumping an environment
 
-At any time, the domain schemas for an environment can be dumped directly back to you over your connection to the server. You can do this by running the following statement:
+At any time, the domain schemas for an environment can be dumped back over your connection to the server. You can do this by running the following statement:
 
 	dump environment 'release-0.8.13';
 
-You can optionally include all of the command and event log data by specifying the following statement:
+Aswell, you can optionally include all of the command and event log data by specifying the following statement:
 
 	dump environment 'release-0.8.13' with logs;
 
@@ -55,8 +55,9 @@ If working on a local server, the contents of the environment can be dumped dire
 
 ### Delete an existing environment
 
-	delete environment 'release-0.8.13';
+If you no longer need an environment, you can delete it from your server. Keep in mind, that this will render all domain schemas, command and event logs irretrievable. This can be done with the following statement:
 
+	delete environment 'release-0.8.13';
 
 # Domains
 
