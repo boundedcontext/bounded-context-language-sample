@@ -1,41 +1,41 @@
 
 # Environments
 
-Environments are their own universe. They contain all of the current domain schemas and keep a log of all commands issued to the environment, including all events that have been created from commands run against the environment.
+Environments are their own universe. They contain all of the current domain schemas and keep a log of all commands issued to the environment, and all resulting events from those commands.
 
-They are where domain schemas are created, imported, reshaped, and tested. It may represent a particular release, a new branch of an existing environment, or just a sandbox.
+This is where domain schemas are created, imported, reshaped, and tested. It may represent a particular release, a new clone of an existing environment, or just a new sandbox to playing around with a domain.
 
 ### Creating an environment
 
-To create a new environment, simply run the following command:
+To create a new environment, simply run the following statement:
 
 	create environment 'release-0.8.12';
 
 ### Cloning an environment
 
-Sometimes, you might want to make changes to your domain schemas, but preserve the existing ones. For this, we've included the ability to clone a new environment from an existing one. You can do this by running:
+Sometimes, you might want to make changes to your domain schemas, but preserve the existing ones. For this, we've included the ability to clone a new environment from an existing one. You can do this by running the following statement:
 
 	clone environment 'release-0.8.13' from 'release-0.8.12';
 
-If you would like to clone an environment, including all of the command and event log data, you can run:
+If you would like to clone an environment, including all of the command and event log data, you can run the following statement:
 
 	clone environment 'release-0.8.13' from 'release-0.8.12' with logs;
 
 ### Renaming an environment
 
-If you're unhappy with the name of the current environment, you can rename it at any time with the following command:
+If you're unhappy with the name of the current environment, you can rename it at any time with the following statement:
 
 	rename environment 'release-0.8.12' to 'release-0.8.13';
 
 ### Resetting an existing environment
 
-Sometimes you want to reset all of the log data for an environment without affecting the current schema. This is useful when running unit and acceptance test cases on your environment. You can do this by running the follwing:
+Sometimes you want to reset all of the log data for an environment without affecting the current schema. This is useful when running unit and acceptance test cases on your environment. You can do this by running the following statement:
 
 	reset environment 'release-0.8.13';
 
 ### Using an environment
 
-You will be working mostly within a single environment at a time. To save time writing statements, you can include the _use_ statement at the beginning of a session so that it doesn't need to be included in any following statements.
+You will be working mostly within a single environment at a time. To save time writing statements, you can include the _use_ statement at the beginning of a session so that it doesn't need to be included in any following statements. You can do this by running the following statement:
 
 	use environment 'release-0.8.13';
 
