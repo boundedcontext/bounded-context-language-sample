@@ -17,7 +17,7 @@ Sometimes, you might want to make changes to your domain schemas, but preserve t
 
 	clone environment 'release-0.8.13' from 'release-0.8.12';
 
-If you would like to clone an environment, including all of the log data, you can run:
+If you would like to clone an environment, including all of the command and event log data, you can run:
 
 	clone environment 'release-0.8.13' from 'release-0.8.12' with logs;
 
@@ -29,7 +29,7 @@ If you're unhappy with the name of the current environment, you can rename it at
 
 ### Resetting an existing environment
 
-Sometimes you want to reset all of the log data for an environment without affecting the current schema. This is useful when running unit and acceptance test cases. You can do this by running the follwing:
+Sometimes you want to reset all of the log data for an environment without affecting the current schema. This is useful when running unit and acceptance test cases on your environment. You can do this by running the follwing:
 
 	reset environment 'release-0.8.13';
 
@@ -41,11 +41,11 @@ You will be working mostly within a single environment at a time. To save time w
 
 ### Dumping an environment
 
-At any time, an environment can be dumped directly back to you over your connection to the server. A dump can contain the domain schemas, with or without the logs, for easy transport to other systems.
+At any time, the domain schemas for an environment can be dumped directly back to you over your connection to the server. You can do this by running the following statement:
 
 	dump environment 'release-0.8.13';
 
-You can optionally include all of the command and event log data by specifying the following:
+You can optionally include all of the command and event log data by specifying the following statement:
 
 	dump environment 'release-0.8.13' with logs;
 
