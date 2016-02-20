@@ -1,0 +1,7 @@
+
+
+in domain 'e-learning';
+
+create context 'training' in 'e-learning';
+
+

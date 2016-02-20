@@ -1,5 +1,6 @@
 
 use environment 'sample-environment';
+in domain 'e-learning';
 
 # Create a Plans aggregate with the current environment id and add two plans to it.
 
@@ -70,8 +71,9 @@ in context 'accounts' for aggregate 'members' :
 
 in context 'accounts' for aggregate 'members' :
 {
-	command 'create' (id, profile) as (
+	command 'create' (id, organisation_id, profile) as (
 		'e8a3da8f-2f47-4e8a-ac8d-e97d4c88c534',
+		'73253024-6b20-4ce9-a1a4-1d06fc79f973',
 		create value\profile (first_name, last_name, email, mobile_number) as (
 			'Bill',
 			'Philson',
@@ -106,6 +108,27 @@ in context 'accounts' for aggregate 'members' :
 		)
 	);
 };
+
+# Set the branding for an Organisation
+
+in context 'accounts' for aggregate 'branding' :
+{
+	command 'create' (id, organisation_id, subdomain, hex_color) as (
+		'e8a3da8f-2f47-4e8a-ac8d-e97d4c88c534',
+		'73253024-6b20-4ce9-a1a4-1d06fc79f973'
+		'test',
+		'#eeeeef'
+	);
+};
+
+in context 'assets' for aggregate 'image' :
+{
+	command 'create' (id, image) as (
+		'e8a3da8f-2f47-4e8a-ac8d-e97d4c88c534',
+		create value\s3image()
+	);
+};
+
 
 
 

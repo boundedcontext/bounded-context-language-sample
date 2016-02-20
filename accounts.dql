@@ -1,35 +1,137 @@
 
 
-create context 'accounts';
-
-create entity 'organisation' (id, public_id, name, plan_id) as (indentifier, string, string, identifier);
-
-create entity 'invite' (id, organisation_id, invite_code) as (identifier, identifier, string);
-create entity 'member' (id, public_id, organistion_id, first_name, last_name, email, mobile_number)
-	as (identifier, string, identifier, string, string, string, string)
-;
+create domain 'e-learning';
+create context 'accounts' in 'e-learning';
 
 #
 # Plans
 #
 
-create entity 'plan' (id, name, member_count) as (identifier, string, integer);
+in context 'accounts' :
+{
+	create entity 'plan' (id, name, member_count) as (identifier, string, integer);
 
-create aggregate 'plans';
+	create aggregate 'plans';
+};
 
-create event 'created' (id) as (identifier) for aggregate 'plans' in context 'accounts';
-create event 'add-plan' (id, plan_id) as (identifier, identifier) for aggregate 'plans' in context 'accounts';
+in context 'accounts' for aggregate 'plans' :
+{
+	create event 'created' (id) as (identifier);
+	create event 'added' (id, plan) as (identifier, entity\plan);
 
-create state 'state' (id, plans) for 'plans' in context 'context'
-	as (identifier, index <entity\plan>)
-	defaults (null, empty)	
-;
+	create state 'plan-state' (id, plans) as (identifier, index <entity\plan>)
+		defaults (null, empty)	
+	;
+};
 
-add handler (event\created) to 'state' for 'plans' in context 'accounts' as ({
-	set id = event.id; 
-});
+in context 'accounts' for aggregate 'plans' with state 'plan-state' :
+{
+	add handler (event\created, state) as ({
+		set (state\id) as (event\id); 
+	});
 
-create command 'create' (id, plan) as (identifier, entity\plan) for aggregate 'plans' in context 'accounts';
+	add handler (event\added, state) as ({
+		add (state\plans) as (event\plan); 
+	});
+};
+
+in context 'accounts' for aggregate 'plans' :
+{
+	create command 'create' (id) as (identifier);
+	create command 'add' (id, plan) as (identifier, entity\plan);
+
+	add handler (command\create, state) as ({
+		apply (event\created) as (state\id); 
+	});
+
+	add handler (command\add, state) as ({
+		apply (event\added) as (state\id, command\plan); 
+	});
+};
+
+#
+# Organisations
+#
+
+in context 'accounts' :
+{
+	create aggregate 'organisations';
+};
+
+in context 'accounts' for aggregate 'organisations' :
+{
+	create event 'created' (id, public_id, name) as (identifier, string, string);
+	create event 'plan-changed' (id, plan_id) as (identifier, identifier);
+
+	create state 'state' (id, public_id, name, plan_id) as (identifier, string, string, identifier)
+		defaults (null, null, null, null)	
+	;
+};
+
+in context 'accounts' for aggregate 'organisations' with state 'state' :
+{
+	add handler (event\created, state) as ({
+		set state (id, public_id, name) as (event\id, event\public_id, event\name);
+	});
+
+	add handler (event\plan-changed, state) as ({
+		set state (plan_id) as (event\plan_id);
+	});
+};
+
+in context 'accounts' for aggregate 'organisations' :
+{
+	create command 'create' (id, public_id, name) as (identifier, string, string);
+	create event 'change-plan' (id, plan_id) as (identifier, entity\plan);
+
+	add handler (command\create, state) as ({
+		apply (event\created) as (state\id, command\public_id, command\name); 
+	});
+
+	add handler (command\change-plan, state) as ({
+		apply (event\plan-changed) as (state\id, command\plan_id); 
+	});
+};
+
+#
+# Members
+#
+
+in context 'accounts' :
+{
+	create value\profile (first_name, last_name, email, mobile_number) 
+		as (string, string, string, string)
+	;
+
+	create aggregate 'members';
+};
+
+in context 'accounts' for aggregate 'members' :
+{
+	create event 'created' (id, organisation_id, profile) as (indentifier, identifier, value\profile);
+	create event 'invited' (id, organisation_id, invite_code) as (identifier, identifier, string);
+	create event 'registered' (id, profile) as (identifier, value\profile);
+
+	create state 'state' (id, organisation_id, invite_code, profile) 
+		as (identifier, identifier, string, value\profile)
+		defaults (null, null, null, null)	
+	;
+};
+
+in context 'accounts' for aggregate 'members' with state 'state' :
+{
+	add handler (event\created, state) as ({
+		set state (id, organisation_id, profile) as (event\id, event\organisation_id, event\profile);
+	});
+
+	add handler (event\invited, state) as ({
+		set state (plan_id) as (event\plan_id);
+	});
+};
+
+
+
+
 
 
 
