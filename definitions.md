@@ -87,6 +87,8 @@ Remember that you can run the _use_ statement at the beginning, or at any point 
 
 	create domain 'e-learning';
 
+**From this point forward**, we'll assume you know how to the _use_ environment statement works.
+
 # Renaming a domain
 
 	rename domain 'e-learning' to 'e-commerce' using environment 'release-0.8.13';
