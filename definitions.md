@@ -111,9 +111,9 @@ You will most likely want to define many things in a domain at a time. To save t
 
 Is it a Booking, a Purchase, or an Order?
 
-Is a Person a Driver when they're (in the context of) driving? They're both. But when they're driving, we might not care about the colour of their hair. But, we might care about their full name for their drivers License. Do we care about a Passenger when a Driver is driving? Of course, it all depends on the context.
+Is a Person a Driver when they're (in the context of) driving? They're both right? When they're driving, we might not care about the colour of their hair and care about their full name, height and eye colour for their License. Maybe we also care about a Passenger, and want to ensure a Passenger and a Driver can never be the same Person. Are they in a Vehicle? It all depends on the context.
 
-A context is that linguistic boundary within a domain. If you have a Person and a Driver in the same context, you probably have two contexts. Maybe one is 'driving' and the other is ''
+A context is that linguistic boundary within a domain.
 
 ### Create a new context
 
