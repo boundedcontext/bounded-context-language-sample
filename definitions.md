@@ -183,11 +183,27 @@ You will most likely want to define many things in a context at a time. To save 
 
 ### Creating aggregates
 
+To create a new aggregate, simply run the following statement:
+
+	create aggregate 'cart' in context 'shopping' for domain 'e-commerce' using environment 'release-0.8.13';
+
+Remember that you can run the _in_ statement at the beginning, or at any point in a DQL file. You can do that as follows:
+
+	in context 'shopping';
+
+	.
+	.
+	.
+
+	create aggregate 'cart';
+
 ### Renaming aggregates
 
 ### Deleting aggregates
 
-### Handling commands in aggregates
+### Aggregate invariants
+
+### Aggregate commands
 
 Create Command (for Aggregate) (in Context) (for Domain) (using Environment)
 Rename Command (for Aggregate) (in Context) (for Domain) (using Environment)
@@ -198,7 +214,7 @@ Create Command Handler (for Aggregate) (in Context) (for Domain) (using Environm
 Redefine Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 Delete Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 
-### Handling Events for aggregates
+### Aggregate events
 
 Create Event (for Aggregate) (in Context) (for Domain) (using Environment)
 Rename Event (for Aggregate) (in Context) (for Domain) (using Environment)
@@ -208,6 +224,16 @@ Delete Event (for Aggregate) (in Context) (for Domain) (using Environment)
 Create Event Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 Redefine Event Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 Delete Event Handler (for Aggregate) (in Context) (for Domain) (using Environment)
+
+# Projections
+
+### Creating projections
+
+### Renaming projections
+
+### Deleting projections
+
+### Handling events and changing tables
 
 # Invariants
 
@@ -228,18 +254,5 @@ Delete Event Handler (for Aggregate) (in Context) (for Domain) (using Environmen
 ### Deleting workflows
 
 ### Handling events and issuing commands in workflows
-
-# Projections
-
-### Creating projections
-
-### Renaming projections
-
-### Deleting projections
-
-### Handling events and changing tables
-
-
-
 
 
