@@ -151,6 +151,35 @@ You will most likely want to define many things in a context at a time. To save 
 
 	in context 'driving';
 
+# Values
+
+### Creating a value
+
+### Renaming a value
+
+### Upgrading a value
+
+### Deleting a value
+
+### Validators
+
+Create Value (in Context) (for Domain) (using Environment)
+Rename Value (in Context) (for Domain) (using Environment)
+Delete Value (in Context) (for Domain) (using Environment)
+
+Create Validator (in Context) (for Domain) (using Environment)
+Rename Validator (in Context) (for Domain) (using Environment)
+Add Validator (to Value) (in Context) (for Domain) (using Environment)
+Remove Validator (from Value) (in Context) (for Domain) (using Environment)
+Delete Validator (in Context) (for Domain) (using Environment)
+
+Create Entity (in Context) (for Domain) (using Environment)
+Rename Entity (in Context) (for Domain) (using Environment)
+Delete Entity (in Context) (for Domain) (using Environment)
+
+Create Aggregate (in Context) (for Domain) (using Environment)
+Rename Aggregate (in Context) (for Domain) (using Environment)
+Delete Aggregate (in Context) (for Domain) (using Environment)
 
 Create Workflow (in Context) (for Domain) (using Environment)
 Rename Workflow (in Context) (for Domain) (using Environment)
@@ -167,25 +196,6 @@ Remove Event Handler [from Projection] (in Context) (for Domain) (using Environm
 Reset Projection (in Context) (for Domain) (using Environment)
 Play Projection (in Context) (for Domain) (using Environment)
 Delete Projection (in Context) (for Domain) (using Environment)
-
-Create Value (in Context) (for Domain) (using Environment)
-Rename Value (in Context) (for Domain) (using Environment)
-Delete Value (in Context) (for Domain) (using Environment)
-
-Create Validator (in Context) (for Domain) (using Environment)
-Rename Validator (in Context) (for Domain) (using Environment)
-Add Validator (to Value) (in Context) (for Domain) (using Environment)
-Remove Validator (from Value) (in Context) (for Domain) (using Environment)
-Delete Validator (in Context) (for Domain) (using Environment)
-
-Create Entity (in Context) (for Domain) (using Environment)
-Rename Entity (in Context) (for Domain) (using Environment)
-Delete Entity (in Context) (for Domain) (using Environment)
-
-
-Create Aggregate (in Context) (for Domain) (using Environment)
-Rename Aggregate (in Context) (for Domain) (using Environment)
-Delete Aggregate (in Context) (for Domain) (using Environment)
 
 Create Command (for Aggregate) (in Context) (for Domain) (using Environment)
 Rename Command (for Aggregate) (in Context) (for Domain) (using Environment)
