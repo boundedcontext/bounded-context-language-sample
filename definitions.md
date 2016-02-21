@@ -17,7 +17,7 @@ Sometimes, you might want to make changes to your domain schemas, but preserve t
 
 	clone environment 'release-0.8.13' from 'release-0.8.12';
 
-If you would like to clone an environment, including all of the command and event log data, you can run the following statement:
+If you would like to clone an environment with all of the command and event log data, you can run the following statement:
 
 	clone environment 'release-0.8.13' from 'release-0.8.12' with logs;
 
@@ -35,7 +35,7 @@ Sometimes you want to reset all of the command and event log data for an environ
 
 ### Reverting an environment
 
-Sometimes you find a bug in your domain, and want to modify the schema so you can retest the case. It can take a few attempts to fix the bug. Reverting allows you to go back to the point where you ran the last command you specify. You can do this by running the following statement:
+Sometimes you find a bug in your domain, and want to modify the schema so you can retest the case. It can take a few attempts to fix the bug. Reverting allows you to go back to the point of the last command you are satisfied has worked. You can do this by running the following statement:
 
 	revert environment 'release-0.8.13' to command 'b7b928f8-a86a-403d-9a54-e006352453e9';
 
@@ -67,16 +67,21 @@ If you no longer need an environment, you can delete it from your server. Keep i
 
 # Domains
 
-A domain is some department
-
+A domain is some set of processes that your business has decided to group together. It could be the core problem your business solves. It could be a domain that supports your business activities. It might be a department that is relevant to every business such sales, accounts, support, or marketing. It could be domains that support your product such as analytics, management, or a-b testing features. It could be domains that support the development process such as error/exception tracking, agile management, devops analytics or quality assurance.
 
 # Creating a domain
 
+To create a new domain, simply run the following statement:
+
 	create domain 'e-learning' using environment 'release-0.8.13';
 
-	|or|
+Remember that you can run the _use_ statement at the beginning, or at any point in a DQL file. You can do that as follows:
 
 	use environment 'release-0.8.13';
+
+	.
+	.
+	.
 
 	create domain 'e-learning';
 
