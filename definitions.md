@@ -145,6 +145,12 @@ If you no longer need a context, you can delete it from a domain. Keep in mind, 
 
 	delete context 'cruising';
 
+### Using a context
+
+You will most likely want to define many things in a context at a time. To save time writing statements, you can include the _in_ statement at the beginning, or at any point in a DQL file, so that it doesn't need to be included in any following statements. You can do this by running the following statement:
+
+	in context 'driving';
+
 
 Create Workflow (in Context) (for Domain) (using Environment)
 Rename Workflow (in Context) (for Domain) (using Environment)
