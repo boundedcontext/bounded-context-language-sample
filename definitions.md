@@ -101,11 +101,17 @@ If you no longer need a domain, you can delete it from an environment. Keep in m
 
 	delete domain 'online-training';
 
+### Using a domain
+
+You will most likely want to define many things in a domain at a time. To save time writing statements, you can include the _for_ statement at the beginning, or at any point in a DQL file, so that it doesn't need to be included in any following statements. You can do this by running the following statement:
+
+	for domain 'online-training';
+
 # Contexts
 
-Is it a Booking, a Purchase, or an Order? Is a Person a Driver when they're (in the context of) driving? 
+Is it a Booking, a Purchase, or an Order?
 
-They're both. But when they're driving, we might not care about the colour of their hair. But, we might care about their full name for their drivers License. Of course, it all depends on the context.
+Is a Person a Driver when they're (in the context of) driving? They're both. But when they're driving, we might not care about the colour of their hair. But, we might care about their full name for their drivers License. Do we care about a Passenger when a Driver is driving? Of course, it all depends on the context.
 
 A context is that linguistic boundary within a domain. If you have a Person and a Driver in the same context, you probably have two contexts. Maybe one is 'driving' and the other is ''
 
