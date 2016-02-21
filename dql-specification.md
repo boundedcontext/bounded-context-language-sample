@@ -75,7 +75,7 @@ It could be domains that support your product such as analytics, management, or 
 
 To create a new domain, simply run the following statement:
 
-	create domain 'e-learning' using environment 'release-0.8.13';
+	create domain 'online-learning' using environment 'release-0.8.13';
 
 Remember that you can run the _use_ statement at the beginning, or at any point in a DQL file. You can do that as follows:
 
@@ -100,4 +100,53 @@ If you're unhappy with the name of a domain, you can rename it at any time with 
 If you no longer need a domain, you can delete it from an environment. Keep in mind, that this **will delete all contexts in the domain**, and archive any commands and events within it. You will no longer have access to any events for projections, or events/commands for workflows. This can be done with the following statement:
 
 	delete domain 'online-training';
-	
+
+### Using a domain
+
+You will most likely want to define many things in a domain at a time. To save time writing statements, you can include the _for_ statement at the beginning, or at any point in a DQL file, so that it doesn't need to be included in any following statements. You can do this by running the following statement:
+
+	for domain 'online-training';
+
+# Contexts
+
+Is it a Booking, a Purchase, or an Order?
+
+Is a Person a Driver when they're (in the context of) driving? They're both right? When they're driving, we might not care about the colour of their hair and care about their full name, height and eye colour for their License. Maybe we also care about a Passenger, and want to ensure a Passenger and a Driver can never be the same Person. Are they in a Vehicle? It all depends on the context.
+
+A context is that linguistic boundary within a domain.
+
+### Creating a context
+
+To create a new context, simply run the following statement:
+
+	create context 'driving' for domain 'automotive' using environment 'release-0.8.13';
+
+Remember that you can run the _for_ statement at the beginning, or at any point in a DQL file. You can do that as follows:
+
+	for domain 'automotive';
+
+	.
+	.
+	.
+
+	create context 'driving';
+
+
+### Renaming a context
+
+If you're unhappy with the name of a context, you can rename it at any time with the following statement:
+
+	rename context 'driving' to 'cruising';
+
+
+### Deleting a context
+
+If you no longer need a context, you can delete it from a domain. Keep in mind, that this **will delete all aggregates, invariants and projections in that context**, and archive any commands and events within it. You will no longer have access to any events for projections, or events/commands for workflows. This can be done with the following statement:
+
+	delete context 'cruising';
+
+### Using a context
+
+You will most likely want to define many things in a context at a time. To save time writing statements, you can include the _in_ statement at the beginning, or at any point in a DQL file, so that it doesn't need to be included in any following statements. You can do this by running the following statement:
+
+	in context 'driving';
