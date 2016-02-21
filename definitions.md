@@ -175,22 +175,6 @@ Create Entity (in Context) (for Domain) (using Environment)
 Rename Entity (in Context) (for Domain) (using Environment)
 Delete Entity (in Context) (for Domain) (using Environment)
 
-# Aggregates
-
-### Creating aggregates
-
-### Renaming aggregates
-
-### Deleting aggregates
-
-### Commands for aggregates
-
-### Events for aggregates
-
-Create Aggregate (in Context) (for Domain) (using Environment)
-Rename Aggregate (in Context) (for Domain) (using Environment)
-Delete Aggregate (in Context) (for Domain) (using Environment)
-
 Create Command (for Aggregate) (in Context) (for Domain) (using Environment)
 Rename Command (for Aggregate) (in Context) (for Domain) (using Environment)
 Upgrade Command (for Aggregate) (in Context) (for Domain) (using Environment)
@@ -201,6 +185,19 @@ Rename Event (for Aggregate) (in Context) (for Domain) (using Environment)
 Upgrade Event (for Aggregate) (in Context) (for Domain) (using Environment)
 Delete Event (for Aggregate) (in Context) (for Domain) (using Environment)
 
+# Aggregates
+
+### Creating aggregates
+
+### Renaming aggregates
+
+### Deleting aggregates
+
+### Handling commands in aggregates
+
+### Handling Events for aggregates
+
+
 Create Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 Redefine Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 Delete Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
@@ -209,27 +206,35 @@ Create Event Handler (for Aggregate) (in Context) (for Domain) (using Environmen
 Redefine Event Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 Delete Event Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 
-Create Invariant (for Aggregate) (in Context) (for Domain) (using Environment)
-Rename Invariant (for Aggregate) (in Context) (for Domain) (using Environment)
-Redefine Invariant (for Aggregate) (in Context) (for Domain) (using Environment)
-Delete Invariant (for Aggregate) (in Context) (for Domain) (using Environment)
+# Invariants
 
-Create Workflow (in Context) (for Domain) (using Environment)
-Rename Workflow (in Context) (for Domain) (using Environment)
-Add Event Handler [to Workflow] (in Context) (for Domain) (using Environment)
-Remove Event Handler [from Workflow] (in Context) (for Domain) (using Environment)
-Reset Workflow (in Context) (for Domain) (using Environment)
-Play Workflow (in Context) (for Domain) (using Environment)
-Delete Workflow (in Context) (for Domain) (using Environment)
+### Creating invariants
 
-Create Projection (in Context) (for Domain) (using Environment)
-Rename Projection (in Context) (for Domain) (using Environment)
-Add Event Handler [to Projection] (in Context) (for Domain) (using Environment)
-Remove Event Handler [from Projection] (in Context) (for Domain) (using Environment)
-Reset Projection (in Context) (for Domain) (using Environment)
-Play Projection (in Context) (for Domain) (using Environment)
-Delete Projection (in Context) (for Domain) (using Environment)
+### Renaming invariants
 
+### Redefining an invariant
+
+### Deleting invariants
+
+# Workflows
+
+### Creating workflows
+
+### Renaming workflows
+
+### Deleting workflows
+
+### Handling events and issuing commands in workflows
+
+# Projections
+
+### Creating projections
+
+### Renaming projections
+
+### Deleting projections
+
+### Handling events and changing tables
 
 
 
