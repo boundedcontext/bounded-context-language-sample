@@ -85,17 +85,21 @@ Remember that you can run the _use_ statement at the beginning, or at any point 
 	.
 	.
 
-	create domain 'e-learning';
+	create domain 'online-learning';
 
 From this point forward, we'll assume you know how the **_use_ environment** statement works.
 
 ### Renaming a domain
 
-	rename domain 'e-learning' to 'e-commerce';
+If you're unhappy with the name of a domain, you can rename it at any time with the following statement:
+
+	rename domain 'online-learning' to 'online-training';
 
 ### Deleting a domain
 
-	delete domain 'e-commerce';
+If you no longer need a domain, you can delete it from an environment. Keep in mind, that this **will delete all contexts in the domain**, and archive any commands and events within that domain. This can be done with the following statement:
+
+	delete domain 'online-training';
 
 # Contexts
 
