@@ -71,7 +71,7 @@ A domain is some set of processes that your business has decided to group togeth
 
 It could be domains that support your product such as analytics, management, or a-b testing features. It could be domains that support the development process such as error/exception tracking, agile management, devops analytics or quality assurance.
 
-# Creating a domain
+### Creating a domain
 
 To create a new domain, simply run the following statement:
 
@@ -89,18 +89,17 @@ Remember that you can run the _use_ statement at the beginning, or at any point 
 
 **From this point forward**, we'll assume you know how the _use_ environment statement works.
 
-# Renaming a domain
+### Renaming a domain
 
 	rename domain 'e-learning' to 'e-commerce';
 
-# Deleting a domain
+### Deleting a domain
 
 	delete domain 'e-commerce';
 
-Contexts
-=
+# Contexts
 
-Create a new context
+### Create a new context
 
 	create context 'training' for domain 'e-learning' using environment 'release-0.8.13';
 
@@ -113,7 +112,7 @@ Create a new context
 	create context 'training';
 
 
-Rename an existing context
+### Rename an existing context
 
 	rename context 'training' to 'learning' for domain 'e-learning' using environment 'release-0.8.13';
 
@@ -126,7 +125,7 @@ Rename an existing context
 	rename context 'training' to 'learning';
 
 
-Delete an existing context
+### Delete an existing context
 
 	delete context 'training' for domain 'e-learning' using environment 'release-0.8.13';
 
