@@ -1,9 +1,9 @@
 
 # Environments
 
-Environments are their own universe. They contain all of the current domain schemas and keep a log of all commands issued to the environment, and all resulting events from those commands.
+Environments are their own universe. They contain all of the current schemas for your domains. They also keep a log of all commands issued to the environment, and a log of as all resulting events from those commands.
 
-This is where domain schemas are created, imported, reshaped, and tested. It may represent a particular release, a new clone of an existing environment, or just a new sandbox for playing around with a domain.
+They are where schemas for domains are created, imported, reshaped, and tested. They may be a particular release of your application. They may be a clone of an existing environment when developing, testing and staging new releases. Or, they may just be a sandbox for playing around with a set of domain schemas when in development.
 
 ### Creating an environment
 
@@ -17,7 +17,7 @@ Sometimes, you might want to make changes to your domain schemas, but preserve t
 
 	clone environment 'release-0.8.13' from 'release-0.8.12';
 
-If you would like to clone an environment, including all of the command and event log data, you can run the following statement:
+If you would like to clone an environment with all of the command and event log data, you can run the following statement:
 
 	clone environment 'release-0.8.13' from 'release-0.8.12' with logs;
 
@@ -27,17 +27,17 @@ If you're unhappy with the name of the current environment, you can rename it at
 
 	rename environment 'release-0.8.12' to 'release-0.8.13';
 
-### Resetting an existing environment
+### Resetting an environment
 
 Sometimes you want to reset all of the command and event log data for an environment without affecting the current schema. This is particularly useful when running unit and acceptance test cases on your environment. You can do this by running the following statement:
 
 	reset environment 'release-0.8.13';
 
-### Using an environment
+### Reverting an environment
 
-You will be working mostly within a single environment at a time. To save time writing statements, you can include the _use_ statement at the beginning of a session so that it doesn't need to be included in any following statements. You can do this by running the following statement:
+Sometimes you find a bug in your domain, and want to modify the schema so you can retest the case. It can take a few attempts to fix the bug. Reverting allows you to go back to the point of the last command you are satisfied has worked. You can do this by running the following statement:
 
-	use environment 'release-0.8.13';
+	revert environment 'release-0.8.13' to command 'b7b928f8-a86a-403d-9a54-e006352453e9';
 
 ### Dumping an environment
 
@@ -53,14 +53,51 @@ If working on a local server, the contents of the environment can be dumped dire
 
 	dump environment 'release-0.8.13' to file '/tmp/release-0.8.13.dql';
 
-### Delete an existing environment
+### Deleting an environment
 
 If you no longer need an environment, you can delete it from your server. Keep in mind, that this **will render all domain schemas, command and event logs irretrievable**. This can be done with the following statement:
 
 	delete environment 'release-0.8.13';
 
+### Using an environment
 
+You will be working mostly within a single environment at a time. To save time writing statements, you can include the _use_ statement at the beginning of a session so that it doesn't need to be included in any following statements. You can do this by running the following statement:
 
+	use environment 'release-0.8.13';
 
+# Domains
 
+A domain is some set of processes that your business has decided to group together. It could be the core problem your business solves. It could be a domain that supports your business activities. It might be a department that is relevant to every business such sales, accounts, support, or marketing.
 
+It could be domains that support your product such as analytics, management, or a-b testing features. It could be domains that support the development process such as error/exception tracking, agile management, devops analytics or quality assurance.
+
+### Creating a domain
+
+To create a new domain, simply run the following statement:
+
+	create domain 'e-learning' using environment 'release-0.8.13';
+
+Remember that you can run the _use_ statement at the beginning, or at any point in a DQL file. You can do that as follows:
+
+	use environment 'release-0.8.13';
+
+	.
+	.
+	.
+
+	create domain 'online-learning';
+
+From this point forward, we'll assume you know how the **_use_ environment** statement works.
+
+### Renaming a domain
+
+If you're unhappy with the name of a domain, you can rename it at any time with the following statement:
+
+	rename domain 'online-learning' to 'online-training';
+
+### Deleting a domain
+
+If you no longer need a domain, you can delete it from an environment. Keep in mind, that this **will delete all contexts in the domain**, and archive any commands and events within it. You will no longer have access to any events for projections, or events/commands for workflows. This can be done with the following statement:
+
+	delete domain 'online-training';
+	
