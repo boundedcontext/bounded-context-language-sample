@@ -1,9 +1,9 @@
 
 # Environments
 
-Environments are their own universe. They contain all of the current domain schemas and keep a log of all commands issued to the environment, and all resulting events from those commands.
+Environments are their own universe. They contain all of the current schemas for your domains. They also keep a log of all commands issued to the environment, and a log of as all resulting events from those commands.
 
-This is where domain schemas are created, imported, reshaped, and tested. It may represent a particular release, a new clone of an existing environment, or just a new sandbox for playing around with a domain.
+They are where schemas for domains are created, imported, reshaped, and tested. They may be a particular release of your application. They may be a clone of an existing environment when developing, testing and staging new releases. Or, they may just be a sandbox for playing around with a set of domain schemas when in development.
 
 ### Creating an environment
 
@@ -27,11 +27,17 @@ If you're unhappy with the name of the current environment, you can rename it at
 
 	rename environment 'release-0.8.12' to 'release-0.8.13';
 
-### Resetting an existing environment
+### Resetting an environment
 
 Sometimes you want to reset all of the command and event log data for an environment without affecting the current schema. This is particularly useful when running unit and acceptance test cases on your environment. You can do this by running the following statement:
 
 	reset environment 'release-0.8.13';
+
+### Reverting an environment
+
+Sometimes you find a bug in your domain, and want to modify the schema so you can retest the case. It can take a few attempts to fix the bug. Reverting allows you to go back to the point where you ran the last command you specify. You can do this by running the following statement:
+
+	revert environment 'release-0.8.13' to command 'b7b928f8-a86a-403d-9a54-e006352453e9';
 
 ### Using an environment
 
@@ -53,7 +59,7 @@ If working on a local server, the contents of the environment can be dumped dire
 
 	dump environment 'release-0.8.13' to file '/tmp/release-0.8.13.dql';
 
-### Delete an existing environment
+### Deleting an environment
 
 If you no longer need an environment, you can delete it from your server. Keep in mind, that this **will render all domain schemas, command and event logs irretrievable**. This can be done with the following statement:
 
@@ -61,10 +67,10 @@ If you no longer need an environment, you can delete it from your server. Keep i
 
 # Domains
 
-A domain organises contexts.
+A domain is some department
 
 
-Create a new domain
+# Creating a domain
 
 	create domain 'e-learning' using environment 'release-0.8.13';
 
@@ -74,8 +80,7 @@ Create a new domain
 
 	create domain 'e-learning';
 
-
-Rename an existing domain
+# Renaming a domain
 
 	rename domain 'e-learning' to 'e-commerce' using environment 'release-0.8.13';
 
@@ -85,8 +90,7 @@ Rename an existing domain
 
 	rename domain 'e-learning' to 'e-commerce';
 
-
-Delete an existing domain
+# Deleting a domain
 
 	delete domain 'learning' using environment 'release-0.8.13';
 
@@ -95,7 +99,6 @@ Delete an existing domain
 	use environment 'release-0.8.13';
 
 	delete domain 'learning';
-
 
 Contexts
 =
