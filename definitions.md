@@ -199,7 +199,15 @@ Remember that you can run the _in_ statement at the beginning, or at any point i
 
 ### Renaming aggregates
 
+If you're unhappy with the name of an aggregate, you can rename it at any time with the following statement:
+
+	rename aggregate 'cart' to 'basket';
+
 ### Deleting aggregates
+
+If you no longer need an aggregate, you can delete it from a context. Keep in mind, that this **will archive any commands and events within** it. You will no longer have access to the aggregate events for projections, or events/commands for workflows. This can be done with the following statement:
+
+	delete context 'cruising';
 
 ### Aggregate invariants
 
