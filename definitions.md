@@ -105,47 +105,39 @@ If you no longer need a domain, you can delete it from an environment. Keep in m
 
 Is it a Booking, a Purchase, or an Order? Is a Person a Driver when they're (in the context of) driving? 
 
-They're both. But when they're driving, we might not care about the colour of their hair, but we do care about their full name for their drivers License. It all depends on the context.
+They're both. But when they're driving, we might not care about the colour of their hair. But, we might care about their full name for their drivers License. Of course, it all depends on the context.
 
-A context is a linguistic barrier within a domain.
+A context is that linguistic boundary within a domain. If you have a Person and a Driver in the same context, you probably have two contexts. Maybe one is 'driving' and the other is ''
 
 ### Create a new context
 
-	create context 'training' for domain 'e-learning' using environment 'release-0.8.13';
+To create a new context, simply run the following statement:
 
-	|or|
+	create context 'driving' for domain 'automotive' using environment 'release-0.8.13';
 
-	use environment 'release-0.8.13';
+Remember that you can run the _for_ statement at the beginning, or at any point in a DQL file. You can do that as follows:
 
-	for domain 'e-learning';
+	for domain 'automotive';
 
-	create context 'training';
+	.
+	.
+	.
+
+	create context 'driving';
 
 
 ### Rename an existing context
 
-	rename context 'training' to 'learning' for domain 'e-learning' using environment 'release-0.8.13';
+If you're unhappy with the name of a context, you can rename it at any time with the following statement:
 
-	|or|
-
-	use environment 'release-0.8.13';
-
-	for domain 'e-learning';
-
-	rename context 'training' to 'learning';
+	rename context 'driving' to 'cruising';
 
 
 ### Delete an existing context
 
-	delete context 'training' for domain 'e-learning' using environment 'release-0.8.13';
+If you no longer need a context, you can delete it from a domain. Keep in mind, that this **will delete all aggregates, invariants and projections in that context**, and archive any commands and events within it. You will no longer have access to any events for projections, or events/commands for workflows. This can be done with the following statement:
 
-	|or|
-
-	use environment 'release-0.8.13';
-
-	for domain 'e-learning';
-
-	delete context 'training';
+	delete context 'cruising';
 
 
 Create Workflow (in Context) (for Domain) (using Environment)
