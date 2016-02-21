@@ -115,7 +115,7 @@ Is a Person a Driver when they're (in the context of) driving? They're both righ
 
 A context is that linguistic boundary within a domain.
 
-### Create a new context
+### Creating a context
 
 To create a new context, simply run the following statement:
 
@@ -132,14 +132,14 @@ Remember that you can run the _for_ statement at the beginning, or at any point 
 	create context 'driving';
 
 
-### Rename an existing context
+### Renaming a context
 
 If you're unhappy with the name of a context, you can rename it at any time with the following statement:
 
 	rename context 'driving' to 'cruising';
 
 
-### Delete an existing context
+### Deleting a context
 
 If you no longer need a context, you can delete it from a domain. Keep in mind, that this **will delete all aggregates, invariants and projections in that context**, and archive any commands and events within it. You will no longer have access to any events for projections, or events/commands for workflows. This can be done with the following statement:
 
