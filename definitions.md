@@ -97,7 +97,7 @@ If you're unhappy with the name of a domain, you can rename it at any time with 
 
 ### Deleting a domain
 
-If you no longer need a domain, you can delete it from an environment. Keep in mind, that this **will delete all contexts in the domain**, and archive any commands and events within that domain. This can be done with the following statement:
+If you no longer need a domain, you can delete it from an environment. Keep in mind, that this **will delete all contexts in the domain**, and archive any commands and events within it. You will no longer have access to any events for projections, or events/commands for workflows. This can be done with the following statement:
 
 	delete domain 'online-training';
 
