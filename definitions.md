@@ -39,12 +39,6 @@ Sometimes you find a bug in your domain, and want to modify the schema so you ca
 
 	revert environment 'release-0.8.13' to command 'b7b928f8-a86a-403d-9a54-e006352453e9';
 
-### Using an environment
-
-You will be working mostly within a single environment at a time. To save time writing statements, you can include the _use_ statement at the beginning of a session so that it doesn't need to be included in any following statements. You can do this by running the following statement:
-
-	use environment 'release-0.8.13';
-
 ### Dumping an environment
 
 At any time, the domain schemas for an environment can be dumped back over your connection to the server. You can do this by running the following statement:
@@ -64,6 +58,12 @@ If working on a local server, the contents of the environment can be dumped dire
 If you no longer need an environment, you can delete it from your server. Keep in mind, that this **will render all domain schemas, command and event logs irretrievable**. This can be done with the following statement:
 
 	delete environment 'release-0.8.13';
+
+### Using an environment
+
+You will be working mostly within a single environment at a time. To save time writing statements, you can include the _use_ statement at the beginning of a session so that it doesn't need to be included in any following statements. You can do this by running the following statement:
+
+	use environment 'release-0.8.13';
 
 # Domains
 
