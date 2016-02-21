@@ -185,7 +185,9 @@ You will most likely want to define many things in a context at a time. To save 
 
 To create a new aggregate, simply run the following statement:
 
-	create aggregate 'cart' in context 'shopping' for domain 'e-commerce' using environment 'release-0.8.13';
+	create aggregate 'cart' (id, items) in context 'shopping' for domain 'e-commerce' using environment 'release-0.8.13'
+		as (core\value\identifier, core\value\index) 
+		defaults (null, empty) ;
 
 Remember that you can run the _in_ statement at the beginning, or at any point in a DQL file. You can do that as follows:
 
@@ -195,7 +197,7 @@ Remember that you can run the _in_ statement at the beginning, or at any point i
 	.
 	.
 
-	create aggregate 'cart';
+	create aggregate 'cart' (id, items) as (core\value\identifier, core\value\index) defaults (null, empty);
 
 ### Renaming aggregates
 
