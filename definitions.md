@@ -171,19 +171,13 @@ You will most likely want to define many things in a context at a time. To save 
 
 #### Deleting validators
 
-Create Entity (in Context) (for Domain) (using Environment)
-Rename Entity (in Context) (for Domain) (using Environment)
-Delete Entity (in Context) (for Domain) (using Environment)
+# Entities
 
-Create Command (for Aggregate) (in Context) (for Domain) (using Environment)
-Rename Command (for Aggregate) (in Context) (for Domain) (using Environment)
-Upgrade Command (for Aggregate) (in Context) (for Domain) (using Environment)
-Delete Command (for Aggregate) (in Context) (for Domain) (using Environment)
+### Creating entities
 
-Create Event (for Aggregate) (in Context) (for Domain) (using Environment)
-Rename Event (for Aggregate) (in Context) (for Domain) (using Environment)
-Upgrade Event (for Aggregate) (in Context) (for Domain) (using Environment)
-Delete Event (for Aggregate) (in Context) (for Domain) (using Environment)
+### Renaming entities
+
+### Deleting entities
 
 # Aggregates
 
@@ -195,12 +189,21 @@ Delete Event (for Aggregate) (in Context) (for Domain) (using Environment)
 
 ### Handling commands in aggregates
 
-### Handling Events for aggregates
-
+Create Command (for Aggregate) (in Context) (for Domain) (using Environment)
+Rename Command (for Aggregate) (in Context) (for Domain) (using Environment)
+Upgrade Command (for Aggregate) (in Context) (for Domain) (using Environment)
+Delete Command (for Aggregate) (in Context) (for Domain) (using Environment)
 
 Create Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 Redefine Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 Delete Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
+
+### Handling Events for aggregates
+
+Create Event (for Aggregate) (in Context) (for Domain) (using Environment)
+Rename Event (for Aggregate) (in Context) (for Domain) (using Environment)
+Upgrade Event (for Aggregate) (in Context) (for Domain) (using Environment)
+Delete Event (for Aggregate) (in Context) (for Domain) (using Environment)
 
 Create Event Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 Redefine Event Handler (for Aggregate) (in Context) (for Domain) (using Environment)
