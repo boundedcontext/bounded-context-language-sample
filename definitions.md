@@ -75,7 +75,7 @@ It could be domains that support your product such as analytics, management, or 
 
 To create a new domain, simply run the following statement:
 
-	create domain 'e-learning' using environment 'release-0.8.13';
+	create domain 'online-learning' using environment 'release-0.8.13';
 
 Remember that you can run the _use_ statement at the beginning, or at any point in a DQL file. You can do that as follows:
 
@@ -102,6 +102,12 @@ If you no longer need a domain, you can delete it from an environment. Keep in m
 	delete domain 'online-training';
 
 # Contexts
+
+Is it a Booking, a Purchase, or an Order?
+
+Is a Person a Driver when they're (in the context of) driving? They're both. But when they're driving, we might not care about the colour of their hair, but we do care about their full name for their drivers License. It all depends on the context.
+
+A context is a linguistic barrier within a domain.
 
 ### Create a new context
 
