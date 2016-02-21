@@ -103,9 +103,9 @@ If you no longer need a domain, you can delete it from an environment. Keep in m
 
 # Contexts
 
-Is it a Booking, a Purchase, or an Order?
+Is it a Booking, a Purchase, or an Order? Is a Person a Driver when they're (in the context of) driving? 
 
-Is a Person a Driver when they're (in the context of) driving? They're both. But when they're driving, we might not care about the colour of their hair, but we do care about their full name for their drivers License. It all depends on the context.
+They're both. But when they're driving, we might not care about the colour of their hair, but we do care about their full name for their drivers License. It all depends on the context.
 
 A context is a linguistic barrier within a domain.
 
