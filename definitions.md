@@ -87,27 +87,15 @@ Remember that you can run the _use_ statement at the beginning, or at any point 
 
 	create domain 'e-learning';
 
-**From this point forward**, we'll assume you know how to the _use_ environment statement works.
+**From this point forward**, we'll assume you know how the _use_ environment statement works.
 
 # Renaming a domain
-
-	rename domain 'e-learning' to 'e-commerce' using environment 'release-0.8.13';
-
-	|or|
-
-	use environment 'release-0.8.13';
 
 	rename domain 'e-learning' to 'e-commerce';
 
 # Deleting a domain
 
-	delete domain 'learning' using environment 'release-0.8.13';
-
-	|or|
-
-	use environment 'release-0.8.13';
-
-	delete domain 'learning';
+	delete domain 'e-commerce';
 
 Contexts
 =
