@@ -278,7 +278,7 @@ Remember that you can run the _in_ statement at the beginning, or at any point i
 	.
 	.
 
-	ccreate workflow 'special-offers';
+	create workflow 'special-offers';
 
 Contextual workflows by default **will only accept events from aggregates within its current context**. For more general workflows, please see the next section.
 
@@ -288,9 +288,13 @@ Contextual workflows by default **will only accept events from aggregates within
 
 If you're unhappy with the name of a workflow, you can rename it at any time with the following statement:
 
-	rename workflow 'special-offers' to 'special-pricing';
+	rename workflow 'special-offers' to 'apply-special-offers-to-carts';
 
 ### Deleting workflows
+
+If you no longer need a workflow, you can delete it. There are no side-effects to deleting a workflow.
+
+	delete workflow 'apply-special-offers-to-carts';
 
 ### Handling events and issuing commands in workflows
 
