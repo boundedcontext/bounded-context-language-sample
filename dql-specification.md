@@ -150,3 +150,93 @@ If you no longer need a context, you can delete it from a domain. Keep in mind, 
 You will most likely want to define many things in a context at a time. To save time writing statements, you can include the _in_ statement at the beginning, or at any point in a DQL file, so that it doesn't need to be included in any following statements. You can do this by running the following statement:
 
 	in context 'driving';
+
+# Workflows
+
+A workflow is a mechanism for handling communication between aggregates, contexts and domains. As an example, when a user/created event is generated in an accounts domain, we may also want to create that user as a shopper in the e-commerce domain. Workflows provide that layer of integration.
+
+##### Three kinds of workflow
+
+There are three kinds of workflows: _contextual_, _domain_, and _environmental_.
+
+A _contextual_ workflow handles communication between aggregates in a given context. When creating a contextual workflow, it is important to note that it will **only accept events from within that context**.
+
+A _domain_ workflow handles communication between contexts in a given domain. When creating a domain workflow, it is imporatant to note that it will **only accept events from within that domain**.
+
+An _environmental_ workflow handles communication between domains. **Any event can be used** in this kind of workflow.
+
+### Creating workflows
+
+To create a new workflow (in this case, a contextual workflow), simply run the following statement:
+
+	create workflow 'special-offers' in context 'shopping' for domain 'e-commerce' using environment 'release-0.8.13';
+
+Remember that you can run the _in_ statement at the beginning, or at any point in a DQL file. You can do that as follows:
+
+	in context 'shopping';
+
+	.
+	.
+	.
+
+	create workflow 'special-offers';
+
+### Renaming workflows
+
+If you're unhappy with the name of a workflow, you can rename it at any time with the following statement:
+
+	rename workflow 'special-offers' to 'apply-special-offers-to-carts';
+
+### Deleting workflows
+
+If you no longer need a workflow, you can delete it. There are no side-effects to deleting a workflow.
+
+	delete workflow 'apply-special-offers-to-carts';
+
+### Handling events and issuing commands in workflows
+
+Handling events in workflows is pretty straight-foward, you can create a handler, alter it's behaviour and delete it.
+
+##### Creating workflow handlers
+
+You can create a workflow event handler by running the following statement:
+
+	using environment '0.8.13';
+	for domain 'e-commerce';
+	in context 'shopping';
+
+	add event handler (accounts\administrating\user\event\created) to 'special-offers' as ({
+
+		dispatch command 'create' (id) to aggregate 'shoppers' 
+			in context 'shopping' 
+			for domain 'e-commerce' 
+			as (event\id)
+		;
+
+	});
+
+##### Alter workflow handlers
+
+You can alter a workflow event handler by running the following statement:
+
+	using environment '0.8.13';
+	for domain 'e-commerce';
+	in context 'shopping';
+
+	alter event handler (accounts\administrating\user\event\created) within 'special-offers' as ({
+
+		.
+		. # new command dispatcher(s)
+		.
+
+	});
+
+##### Removing workflow handlers
+
+You can remove a workflow event handler by running the following statement:
+
+	using environment '0.8.13';
+	for domain 'e-commerce';
+	in context 'shopping';
+
+	remove event handler (accounts\administrating\user\event\created) from 'special-offers';
