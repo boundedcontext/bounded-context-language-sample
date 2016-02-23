@@ -261,7 +261,7 @@ To dispatch a command, you can run the following statement:
 
 	use environment 'release-0.8.13';
 
-	dispatch command 'create' (id, shopper_id) for aggregate 'carts'
+	dispatch command 'create' (id, shopper_id) to aggregate 'carts'
 		in context 'shopping'
 		for domain 'e-commerce'
 		as ('3a97e3ea-4781-4c33-92bf-3b3f10cdcce0', 'af424258-3523-4a2c-b676-38c3b15bb5cc')
