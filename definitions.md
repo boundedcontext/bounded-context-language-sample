@@ -270,9 +270,9 @@ A workflow is a mechanism for handling communication between aggregates, context
 
 There are three kinds of workflows: _contextual_, _domain_, and _environmental_.
 
-A _contextual_ workflow handles communication between aggregates in a given context. When creating a contextual workflow, it is important to note that it will only accept events **from within that context**.
+A _contextual_ workflow handles communication between aggregates in a given context. When creating a contextual workflow, it is important to note that it will **only accept events from within that context**.
 
-A _domain_ workflow handles communication between contexts in a given domain. When creating a domain workflow, it is imporatant to note that it will only accept events **from within that domain**.
+A _domain_ workflow handles communication between contexts in a given domain. When creating a domain workflow, it is imporatant to note that it will **only accept events from within that domain**.
 
 An _environmental_ workflow handles communication between domains. **Any event can be used** in this kind of workflow.
 
@@ -306,4 +306,15 @@ If you no longer need a workflow, you can delete it. There are no side-effects t
 
 ### Handling events and issuing commands in workflows
 
+Handling events in workflows is pretty straight-foward, you can create a handler, redefine it's behaviour and delete.
+
+##### Creating workflow handlers
+
+You can create a workflow event handler by running the following statement:
+
+	create handler (event\created) as ({
+
+		dispatch command\create (id) as (event\created\id);
+
+	});
 
