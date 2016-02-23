@@ -306,7 +306,7 @@ If you no longer need a workflow, you can delete it. There are no side-effects t
 
 ### Handling events and issuing commands in workflows
 
-Handling events in workflows is pretty straight-foward, you can create a handler, update it's behaviour and delete it.
+Handling events in workflows is pretty straight-foward, you can create a handler, alter it's behaviour and delete it.
 
 ##### Creating workflow handlers
 
@@ -326,15 +326,15 @@ You can create a workflow event handler by running the following statement:
 
 	});
 
-##### Updating workflow handlers
+##### Alter workflow handlers
 
-You can create a workflow event handler by running the following statement:
+You can alter a workflow event handler by running the following statement:
 
 	using environment '0.8.13';
 	for domain 'e-commerce';
 	in context 'shopping';
 
-	update event handler (accounts\administrating\user\event\created) to 'special-offers' as ({
+	alter event handler (accounts\administrating\user\event\created) within 'special-offers' as ({
 
 		.
 		. # new command dispatcher(s)
