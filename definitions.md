@@ -220,12 +220,33 @@ If you no longer need an aggregate, you can delete it from a context. Keep in mi
 
 ### Aggregate invariants
 
+##### Creating invariants
+
+##### Renaming invariants
+
+##### Altering an invariant
+
+##### Deleting invariants
+
 ### Aggregate commands
+
+##### Creating aggregate commands
+
+To create an aggregate command, run the following statement:
+
+	using environment '0.8.13';
+	for domain 'e-commerce';
+	in context 'shopping';
+	for aggregate 'carts';
+
+	create command 'create' (id, shopper_id) as (core\value\identifier, core\value\identifier);
 
 Create Command (for Aggregate) (in Context) (for Domain) (using Environment)
 Rename Command (for Aggregate) (in Context) (for Domain) (using Environment)
 Upgrade Command (for Aggregate) (in Context) (for Domain) (using Environment)
 Delete Command (for Aggregate) (in Context) (for Domain) (using Environment)
+Archive Command (for Aggregate) (in Context) (for Domain) (using Environment)
+Dispatching a Command (for Aggregate) (in Context) (for Domain) (using Environment)
 
 Create Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 Redefine Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
@@ -237,6 +258,7 @@ Create Event (for Aggregate) (in Context) (for Domain) (using Environment)
 Rename Event (for Aggregate) (in Context) (for Domain) (using Environment)
 Upgrade Event (for Aggregate) (in Context) (for Domain) (using Environment)
 Delete Event (for Aggregate) (in Context) (for Domain) (using Environment)
+Archive Event (for Aggregate) (in Context) (for Domain) (using Environment)
 
 Create Event Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 Redefine Event Handler (for Aggregate) (in Context) (for Domain) (using Environment)
@@ -251,16 +273,6 @@ Delete Event Handler (for Aggregate) (in Context) (for Domain) (using Environmen
 ### Deleting projections
 
 ### Handling events and changing tables
-
-# Invariants
-
-### Creating invariants
-
-### Renaming invariants
-
-### Redefining an invariant
-
-### Deleting invariants
 
 # Workflows
 
@@ -326,7 +338,7 @@ You can create a workflow event handler by running the following statement:
 
 	});
 
-##### Alter workflow handlers
+##### Altering workflow handlers
 
 You can alter a workflow event handler by running the following statement:
 
