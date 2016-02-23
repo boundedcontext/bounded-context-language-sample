@@ -260,8 +260,8 @@ If you're unhappy with the name of a command, you can rename it at any time with
 To dispatch a command, you can run the following statement:
 
 	for aggregate 'carts';
-	
-	dispatch command 'create' (id) as ('3a97e3ea-4781-4c33-92bf-3b3f10cdcce0');
+
+	dispatch command 'create' (id) as ('3a97e3ea-4781-4c33-92bf-3b3f10cdcce0', 'af424258-3523-4a2c-b676-38c3b15bb5cc');
 
 Create Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 Redefine Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
