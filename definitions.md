@@ -266,7 +266,7 @@ Delete Event Handler (for Aggregate) (in Context) (for Domain) (using Environmen
 
 ### Creating workflows
 
-To create a new workflow, simply run the following statement:
+To create a new contextual workflow, simply run the following statement:
 
 	create workflow 'special-offers' in context 'shopping' for domain 'e-commerce' using environment 'release-0.8.13';
 
@@ -278,10 +278,11 @@ Remember that you can run the _in_ statement at the beginning, or at any point i
 	.
 	.
 
-	create aggregate 'cart' (id, shopper_id, items) 
-		as (core\value\identifier, core\value\identifier, core\value\index) 
-		defaults (null, null, empty)
-	;
+	ccreate workflow 'special-offers';
+
+Contextual workflows by default **will only accept events from aggregates within its current context**. For more general workflows, please see the next section.
+
+#### Domain-wide workflows
 
 ### Renaming workflows
 
