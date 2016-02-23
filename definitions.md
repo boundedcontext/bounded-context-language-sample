@@ -241,12 +241,27 @@ To create an aggregate command, run the following statement:
 
 	create command 'create' (id, shopper_id) as (core\value\identifier, core\value\identifier);
 
-Create Command (for Aggregate) (in Context) (for Domain) (using Environment)
-Rename Command (for Aggregate) (in Context) (for Domain) (using Environment)
-Upgrade Command (for Aggregate) (in Context) (for Domain) (using Environment)
-Delete Command (for Aggregate) (in Context) (for Domain) (using Environment)
-Archive Command (for Aggregate) (in Context) (for Domain) (using Environment)
-Dispatching a Command (for Aggregate) (in Context) (for Domain) (using Environment)
+##### Renaming aggregate commands
+
+If you're unhappy with the name of a command, you can rename it at any time with the following statement:
+
+	for aggregate 'carts';
+
+	rename command 'create' to 'make';
+
+##### Upgrading aggregate commands
+
+##### Deleting aggregate commands
+
+##### Archiving aggregate commands
+
+##### Dispatching aggregate commands
+
+To dispatch a command, you can run the following statement:
+
+	for aggregate 'carts';
+	
+	dispatch command 'create' (id) as ('3a97e3ea-4781-4c33-92bf-3b3f10cdcce0');
 
 Create Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 Redefine Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
