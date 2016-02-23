@@ -282,9 +282,13 @@ Remember that you can run the _in_ statement at the beginning, or at any point i
 
 Contextual workflows by default **will only accept events from aggregates within its current context**. For more general workflows, please see the next section.
 
-#### Domain-wide workflows
+##### Creating domain-wide workflows
 
 ### Renaming workflows
+
+If you're unhappy with the name of a workflow, you can rename it at any time with the following statement:
+
+	rename workflow 'special-offers' to 'special-pricing';
 
 ### Deleting workflows
 
