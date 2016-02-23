@@ -336,11 +336,9 @@ You can create a workflow event handler by running the following statement:
 
 	update event handler (accounts\administrating\user\event\created) to 'special-offers' as ({
 
-		dispatch command 'create' (id) to aggregate 'shoppers' 
-			in context 'shopping' 
-			for domain 'e-commerce' 
-			as (event\id)
-		;
+		.
+		. # new command dispatcher(s)
+		.
 
 	});
 
