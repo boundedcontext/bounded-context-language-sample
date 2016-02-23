@@ -270,11 +270,11 @@ A workflow is a mechanism for handling communication between aggregates, context
 
 There are three kinds of workflows: _contextual_, _domain_, and _environmental_.
 
-A _contextual_ workflow handles communication between aggregates in a given context. When creating a contextual workflow, it is imporatant to note that it will only accept events from within that context.
+A _contextual_ workflow handles communication between aggregates in a given context. When creating a contextual workflow, it is important to note that it will only accept events **from within that context**.
 
-A _domain_ workflow handles communication between contexts in a given domain. When creating a domain workflow, it is imporatant to note that it will only accept events from within that domain.
+A _domain_ workflow handles communication between contexts in a given domain. When creating a domain workflow, it is imporatant to note that it will only accept events **from within that domain**.
 
-An _environmental_ workflow handles communication between domains. Any event can be used in this kind of workflow.
+An _environmental_ workflow handles communication between domains. **Any event can be used** in this kind of workflow.
 
 ### Creating workflows
 
