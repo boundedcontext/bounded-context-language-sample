@@ -264,23 +264,21 @@ Delete Event Handler (for Aggregate) (in Context) (for Domain) (using Environmen
 
 # Workflows
 
-A workflow is a mechanism for handling aggregates-to-aggregate, context-to-context and domain-to-domain integration and communication.
-
-When a user/created event is generated in an accounts domain, we may also want to create that user as a shopper in the e-commerce domain. In this case, a user/created event triggers a shopper/create command to be dispatched.
+A workflow is a mechanism for handling communication between aggregates, contexts and domains. As an example, when a user/created event is generated in an accounts domain, we may also want to create that user as a shopper in the e-commerce domain. Workflows provide that layer of integration.
 
 ##### Three kinds of workflow
 
 There are three kinds of workflows: _contextual_, _domain_, and _environmental_.
 
-A contextual workflow handles communication between aggregates in a given context. When creating a contextual workflow, it is imporatant to note that it will only accept events from within that context.
+A _contextual_ workflow handles communication between aggregates in a given context. When creating a contextual workflow, it is imporatant to note that it will only accept events from within that context.
 
-A domain workflow handles communication between contexts in a given domain. When creating a domain workflow, it is imporatant to note that it will only accept events from within that domain.
+A _domain_ workflow handles communication between contexts in a given domain. When creating a domain workflow, it is imporatant to note that it will only accept events from within that domain.
 
-An environmental workflow handles communication between domains. Any event can be used in this kind of workflow.
+An _environmental_ workflow handles communication between domains. Any event can be used in this kind of workflow.
 
 ### Creating workflows
 
-To create a new contextual workflow, simply run the following statement:
+To create a new workflow (in this case, a contextual workflow), simply run the following statement:
 
 	create workflow 'special-offers' in context 'shopping' for domain 'e-commerce' using environment 'release-0.8.13';
 
@@ -293,13 +291,6 @@ Remember that you can run the _in_ statement at the beginning, or at any point i
 	.
 
 	create workflow 'special-offers';
-
-Contextual workflows by default **will only accept events from aggregates within its current context**. For more general workflows, please see the next section.
-
-##### Creating domain workflows
-
-##### Creating environmental workflows
-
 
 ### Renaming workflows
 
