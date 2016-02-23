@@ -264,9 +264,9 @@ Delete Event Handler (for Aggregate) (in Context) (for Domain) (using Environmen
 
 # Workflows
 
-A workflow is a mechanism for aggregates-to-aggregate, context-to-context and domain-to-domain communication. The idea is simple, when an event from a particular aggregate is handled, execute the one or more commands on aggregates from a different context, or a different domain.
+A workflow is a mechanism for aggregates-to-aggregate, context-to-context and domain-to-domain communication. The idea is simple, when a particular event , we want to execute the one or more commands on aggregates from a different context, or a different domain.
 
-There are one or two rules 
+There are three kinds of supported workflows, a contextual workflow, a domain workflow, and an environment workflow. A contextual workflow handles communication between aggregates in a given context. A domain workflow handles communication between contexts in a given domain. An environmental workflow handles communication between domains.
 
 ### Creating workflows
 
@@ -286,8 +286,9 @@ Remember that you can run the _in_ statement at the beginning, or at any point i
 
 Contextual workflows by default **will only accept events from aggregates within its current context**. For more general workflows, please see the next section.
 
-##### Creating domain-wide workflows
+##### Creating domain workflows
 
+##### Creating environment workflows
 
 
 ### Renaming workflows
