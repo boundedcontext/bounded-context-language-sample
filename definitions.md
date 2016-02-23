@@ -268,15 +268,15 @@ A workflow is a mechanism for handling aggregates-to-aggregate, context-to-conte
 
 When a user/created event is generated in an accounts domain, we may also want to create that user as a shopper in the e-commerce domain. In this case, a user/created event triggers a shopper/create command to be dispatched.
 
-##### Types of workflow
+##### Three kinds of workflow
 
-There are three kinds of workflows, contextual, domain, and environment.
+There are three kinds of workflows: _contextual_, _domain_, and _environmental_.
 
-A contextual workflow handles communication between aggregates in a given context. 
+A contextual workflow handles communication between aggregates in a given context. When creating a contextual workflow, it is imporatant to note that it will only accept events from within that context.
 
-A domain workflow handles communication between contexts in a given domain. 
+A domain workflow handles communication between contexts in a given domain. When creating a domain workflow, it is imporatant to note that it will only accept events from within that domain.
 
-An environmental workflow handles communication between domains.
+An environmental workflow handles communication between domains. Any event can be used in this kind of workflow.
 
 ### Creating workflows
 
