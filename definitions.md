@@ -218,16 +218,6 @@ If you no longer need an aggregate, you can delete it from a context. Keep in mi
 
 	delete context 'cruising';
 
-### Aggregate invariants
-
-##### Creating invariants
-
-##### Renaming invariants
-
-##### Altering an invariant
-
-##### Deleting invariants
-
 ### Aggregate commands
 
 ##### Creating aggregate commands
@@ -265,9 +255,52 @@ To dispatch a command, you can run the following statement:
 		as ('3a97e3ea-4781-4c33-92bf-3b3f10cdcce0', 'af424258-3523-4a2c-b676-38c3b15bb5cc')
 	;
 
-Create Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
-Redefine Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
-Delete Command Handler (for Aggregate) (in Context) (for Domain) (using Environment)
+### Using invariants in aggregates
+
+### Handling commands
+
+##### Creating command handlers
+
+You can create a aggregate command handler by running the following statement:
+
+	using environment '0.8.13';
+	for domain 'e-commerce';
+	in context 'shopping';
+
+	add command handler (create) to 'special-offers' as ({
+
+		assert not 'created';
+
+		set created = 1;
+		set cart = command\cart;
+
+	});
+
+##### Altering command handlers
+
+You can alter a aggregate command handler by running the following statement:
+
+	using environment '0.8.13';
+	for domain 'e-commerce';
+	in context 'shopping';
+
+	alter command handler (created) within 'special-offers' as ({
+
+		.
+		. # new invariants and setters
+		.
+
+	});
+
+##### Removing command handlers
+
+You can remove an aggregate command handler by running the following statement:
+
+	using environment '0.8.13';
+	for domain 'e-commerce';
+	in context 'shopping';
+
+	remove command handler (created) from 'special-offers';
 
 ### Aggregate events
 
@@ -281,15 +314,15 @@ Create Event Handler (for Aggregate) (in Context) (for Domain) (using Environmen
 Redefine Event Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 Delete Event Handler (for Aggregate) (in Context) (for Domain) (using Environment)
 
-# Projections
+# Invariants
 
-A projection is a way of storing data about something in your context. It could be a projection that answers questions for a particular invariant in the context.
+An invariant enforces rules based on the current state of the current context.
 
-### Creating projections
+### Creating invariants
 
 To create a new projection simply run the following statement:
 
-	create projection 'active-carts' in context 'shopping' for domain 'e-commerce' using environment 'release-0.8.13';
+	create invariant 'shopper-has-active-cart' in context 'shopping' for domain 'e-commerce' using environment 'release-0.8.13';
 
 Remember that you can run the _in_ statement at the beginning, or at any point in a DQL file. You can do that as follows:
 
