@@ -249,8 +249,6 @@ If you're unhappy with the name of a command, you can rename it at any time with
 
 	rename command 'create' to 'make';
 
-##### Upgrading aggregate commands
-
 ##### Deleting aggregate commands
 
 ##### Archiving aggregate commands
@@ -285,11 +283,35 @@ Delete Event Handler (for Aggregate) (in Context) (for Domain) (using Environmen
 
 # Projections
 
+A projection is a way of storing data about something in your context. It could be a projection that answers questions for a particular invariant in the context.
+
 ### Creating projections
+
+To create a new projection simply run the following statement:
+
+	create projection 'active-carts' in context 'shopping' for domain 'e-commerce' using environment 'release-0.8.13';
+
+Remember that you can run the _in_ statement at the beginning, or at any point in a DQL file. You can do that as follows:
+
+	in context 'shopping';
+
+	.
+	.
+	.
+
+	create projection 'active-carts';
 
 ### Renaming projections
 
+If you're unhappy with the name of a projection, you can rename it at any time with the following statement:
+
+	rename projection 'active-carts' to 'active-member-carts';
+
 ### Deleting projections
+
+If you no longer need a projection, you can delete it. If a projection is assocated with an invariant, that invariant would need to be deleted first before deleting the projection.
+
+	delete projection 'active-member-carts';
 
 ### Handling events and changing tables
 
