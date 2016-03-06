@@ -1,17 +1,25 @@
 
+# Create Environment, Domain and Context
+
 create environment 'develop-0.0.1';
 
 create domain 'e-commerce' using environment 'develop-0.0.1';
 create context 'shopping' for domain 'e-commerce' using environment 'develop-0.0.1';
 
+# Using Environment, Domain and Context
+
 using environment 'develop-0.0.1';
 for domain 'e-commerce';
 in context 'shopping';
+
+# Aggregate
 
 create aggregate 'carts' (shopper_id, products, is_created, is_checked_out)
 	as (identifier, identifier, index, boolean, boolean) 
 	defaults (null, empty, false, false)
 ;
+
+# Events
 
 create event 'empty';
 create event 'full';
@@ -19,22 +27,19 @@ create event 'full';
 create event 'created' (shopper_id) as (identifier);
 
 add handler for event 'created' as ({
-	from agregate
-		set is_created = true;
+	set is_created = true;
 });
 
 create event 'checked-out';
 
 add handler for event 'checked-out' as ({
-	from aggregate
-		set is_checked_out = true;
+	set is_checked_out = true;
 });
 
 create event 'product-added' (product) as (entity\product);
 
 add handler for event 'product-added' as ({
-	from aggregate
-		add to index 'products' (product.id);
+	add to index 'products' (product.id);
 });
 
 create event 'product-quantity-changed' (product_id, quantity) as (identifier, value\quantity);
@@ -42,9 +47,10 @@ create event 'product-quantity-changed' (product_id, quantity) as (identifier, v
 create event 'product-removed' (product_id) as (identifier);
 
 add handler for event 'product-removed' as ({
-	from aggregate
-		remove from index 'products' (product.id);
+	remove from index 'products' (product.id);
 });
+
+# Invariants
 
 create invariant 'created' satisfied when ({
 	from aggregate where is_created = true;
@@ -79,6 +85,8 @@ create invariant 'has-one-cart' (shopper_id) as (identifier) satisfied when ({
 		and is_checked_out = true
 	greater_than 0;
 });
+
+# Commands
 
 create command 'create' (shopper_id) as (identifier);
 

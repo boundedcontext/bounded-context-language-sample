@@ -1,0 +1,49 @@
+
+using environment 'develop-0.0.1';
+for domain 'e-commerce';
+in context 'shopping';
+
+	# creating a cart
+	dispatch command 'create' to aggregate 'carts' (shopper_id)
+		identifier '3a97e3ea-4781-4c33-92bf-3b3f10cdcce0'
+		as ('5d5f651f-e902-4506-aa73-1e043863577a')
+	;
+
+	# adding product to cart
+	dispatch command 'add-product' to aggregate 'carts' (product)
+		identifier '3a97e3ea-4781-4c33-92bf-3b3f10cdcce0'
+		as (
+			entity\product('af424258-3523-4a2c-b676-38c3b15bb5cc', 5)
+		)
+	;
+
+	# adding product to cart
+	dispatch command 'add-product' to aggregate 'carts' (product)
+		identifier '3a97e3ea-4781-4c33-92bf-3b3f10cdcce0'
+		as (
+			entity\product('ce9ae7eb-4f6d-442c-9eb3-59272ffa4aa5', 2)
+		)
+	;
+
+	# changing a product's quantity in cart
+	dispatch command 'add-product' to aggregate 'carts' (product_id, quantity)
+		identifier '3a97e3ea-4781-4c33-92bf-3b3f10cdcce0'
+		as (
+			'af424258-3523-4a2c-b676-38c3b15bb5cc',
+			value\quantity(3)
+		)
+	;
+
+	# removing a product from cart
+	dispatch command 'add-product' to aggregate 'carts' (product_id)
+		identifier '3a97e3ea-4781-4c33-92bf-3b3f10cdcce0'
+		as (
+			'af424258-3523-4a2c-b676-38c3b15bb5cc'
+		)
+	;
+
+	# checking out a cart
+	dispatch command 'checkout' to aggregate 'carts'
+		identifier '3a97e3ea-4781-4c33-92bf-3b3f10cdcce0'
+	;
+
