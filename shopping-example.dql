@@ -7,7 +7,9 @@ in context 'shopping';
 # creating a cart
 dispatch command 'create' to aggregate 'carts' (shopper_id)
 	identifier '3a97e3ea-4781-4c33-92bf-3b3f10cdcce0'
-	as ('5d5f651f-e902-4506-aa73-1e043863577a')
+	as (
+		'5d5f651f-e902-4506-aa73-1e043863577a'
+	)
 ;
 
 # adding product to cart
