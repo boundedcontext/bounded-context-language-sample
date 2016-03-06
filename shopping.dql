@@ -23,6 +23,54 @@ create aggregate 'carts' (shopper_id, products, is_created, is_checked_out)
 
 within aggregate 'carts';
 
+# Invariants
+
+create invariant 'created' satisfied by (
+	<:
+		from aggregate
+		check is_created == true
+	:>
+);
+
+create invariant 'checked-out' satisfied by (
+	<:
+		from aggregate
+		check is_checked_out == true
+	:>
+);
+
+create invariant 'empty' satisfied by (
+	<:
+		from aggregate
+		check (count index 'products') == 0
+	:>
+);
+
+create invariant 'full' satisfied by (
+	<:
+		from aggregate
+		check (count index 'products') == 10
+	:>
+);
+
+create invariant 'product-exists' (product_id) as (identifier) satisfied by (
+	<:
+		from aggregate
+		check (exists in index 'products')
+	:>
+);
+
+create invariant 'has-one-cart' (shopper_id) as (identifier) satisfied by (
+	<:
+		from all
+		count as cart_count
+		where shopper_id = shopper_id
+			and is_created = true
+			and is_checked_out = true
+		check cart_count > 0
+	:>
+);
+
 # Events and Handlers
 
 create event 'empty';
@@ -47,44 +95,6 @@ add handler for event 'product-added' as ({
 
 add handler for event 'product-removed' as ({
 	remove from index 'products' (product.id);
-});
-
-# Invariants
-
-create invariant 'created' satisfied when ({
-	from aggregate
-		where is_created = true;
-});
-
-create invariant 'checked-out' satisfied when ({
-	from aggregate
-		where is_checked_out = true;
-});
-
-create invariant 'empty' satisfied when ({
-	from aggregate
-		count in index 'products'
-		equals 0;
-});
-
-create invariant 'full' satisfied when ({
-	from aggregate
-		count in index 'products'
-		equals 10;
-});
-
-create invariant 'product-exists' (product_id) as (identifier) satisfied when ({
-	from aggregate
-		exists (product_id) in index 'products';
-});
-
-create invariant 'has-one-cart' (shopper_id) as (identifier) satisfied when ({
-	from all
-		count
-		where shopper_id = shopper_id
-			and is_created = true
-			and is_checked_out = true
-		greater_than 0;
 });
 
 # Commands and Handlers
