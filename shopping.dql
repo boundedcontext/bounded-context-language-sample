@@ -42,21 +42,24 @@ create invariant 'checked-out' satisfied by (
 create invariant 'empty' satisfied by (
 	<:
 		from aggregate
-		check (count index 'products') == 0
+		count index 'products' as product_count
+		check product_count == 0
 	:>
 );
 
 create invariant 'full' satisfied by (
 	<:
 		from aggregate
-		check (count index 'products') == 10
+		count index 'products' as product_count
+		check product_count == 10
 	:>
 );
 
 create invariant 'product-exists' (product_id) as (identifier) satisfied by (
 	<:
 		from aggregate
-		check (exists in index 'products')
+		exists product_id in index 'products' as product_exists
+		check product_exists == true
 	:>
 );
 
