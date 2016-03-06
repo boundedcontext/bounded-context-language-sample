@@ -2,3 +2,9 @@
 use environment 'sample-environment';
 in domain 'e-learning';
 
+# Create a new Course
+
+# Add 2 scorm modules to the Course
+
+# Create 2 licenses in the Course for the Organisation
+

@@ -192,9 +192,9 @@ As an example take a carts aggregate in the context of shopping.
 
 To create a new aggregate, simply run the following statement:
 
-	create aggregate 'cart' (id, shopper_id, items, is_created, is_checked_out)
+	create aggregate 'carts' (shopper_id, items, is_created, is_checked_out)
 		as (identifier, identifier, index, boolean, boolean) 
-		defaults (null, null, empty, false, false)
+		defaults (null, empty, false, false)
 		in context 'shopping' 
 		for domain 'e-commerce' 
 		using environment 'release-0.8.13'
@@ -208,8 +208,8 @@ Remember that you can run the _in_ statement at the beginning, or at any point i
 	.
 	.
 
-	create aggregate 'cart' (id, shopper_id, items, is_created, is_checked_out) 
-		as (identifier, identifier, index, boolean, boolean) 
+	create aggregate 'carts' (shopper_id, items, is_created, is_checked_out) 
+		as (identifier, index, boolean, boolean) 
 		defaults (null, null, empty)
 	;
 
@@ -217,13 +217,13 @@ Remember that you can run the _in_ statement at the beginning, or at any point i
 
 If you're unhappy with the name of an aggregate, you can rename it at any time with the following statement:
 
-	rename aggregate 'cart' to 'basket';
+	rename aggregate 'carts' to 'baskets';
 
 ### Deleting aggregates
 
 If you no longer need an aggregate, you can delete it from a context. Keep in mind, that this **will archive any commands and events within** it. You will no longer have access to the aggregate events for projections, or events/commands for workflows. This can be done with the following statement:
 
-	delete context 'cruising';
+	delete aggregate 'carts';
 
 ### Aggregate commands
 
@@ -234,9 +234,9 @@ To create an aggregate command, run the following statement:
 	using environment '0.8.13';
 	for domain 'e-commerce';
 	in context 'shopping';
-	for aggregate 'carts';
+	within aggregate 'carts';
 
-	create command 'create' (id, shopper_id) as (identifier, identifier);
+	create command 'create' (shopper_id) as (identifier);
 
 ##### Renaming aggregate commands
 
@@ -255,11 +255,12 @@ If you're unhappy with the name of a command, you can rename it at any time with
 To dispatch a command, you can run the following statement:
 
 	use environment 'release-0.8.13';
+	for domain 'e-commerce';
+	in context 'shopping';
 
-	dispatch command 'create' (id, shopper_id) to aggregate 'carts'
-		in context 'shopping'
-		for domain 'e-commerce'
-		as ('3a97e3ea-4781-4c33-92bf-3b3f10cdcce0', 'af424258-3523-4a2c-b676-38c3b15bb5cc')
+	dispatch command 'create' to aggregate 'carts' (shopper_id)
+		as ('af424258-3523-4a2c-b676-38c3b15bb5cc')
+		identifier '3a97e3ea-4781-4c33-92bf-3b3f10cdcce0'
 	;
 
 ### Using invariants in aggregates

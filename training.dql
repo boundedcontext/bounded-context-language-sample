@@ -5,3 +5,25 @@ in domain 'e-learning';
 create context 'training' in 'e-learning';
 
 
+in context 'accounts' for aggregate 'plans' :
+{
+	command 'create' (id) as (environment\id);
+
+	command 'add' (id, plan) as (
+		environment\id,
+		create entity\plan (id, name, member_count) as (
+			'b87f2b2e-9e88-4b9b-90ac-421a8fa7a43c', 
+			'Single', 
+			1
+		)
+	);
+
+	command 'add' (id, plan) as (
+		environment\id,
+		create entity\plan (id, name, member_count) as (
+			'177350ff-c480-4022-8b78-7f486c9ba5b5', 
+			'Small', 
+			10
+		)
+	);
+};
