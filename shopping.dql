@@ -138,10 +138,6 @@ add handler for command 'checkout' as ({
     assert not 'checked-out';
 
     apply event 'checked-out';
-
-    check 'empty' then ({
-    	apply event 'empty';
-    });
 });
 
 
