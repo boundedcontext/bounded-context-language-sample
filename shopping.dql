@@ -122,77 +122,61 @@ create command 'checkout';
 add handler for command 'create' (
 	<{
 	    assert invariant not 'created';
-	    assert invariant 'has-one-cart';
+	    assert invariant 'has-one-cart' (command.shopper_id);
 
-	    apply event 'created' (shopper_id) 
-	    	as (command.shopper_id)
-	    ;
-
+	    apply event 'created' (command.shopper_id); 
 	    apply event 'empty';
 	}>
 );
 
 add handler for command 'add-product' (
-	{
+	<{
 	    assert invariant not 'checked-out';
 	    assert invariant not 'full';
+	    assert invariant not 'product-exists' (command.product.id);
 
-	    assert invariant not 'product-exists' (product_id) 
-	    	as (command.product.id)
-	    ;
-
-	    apply event 'product-added' (product) 
-	    	as (command.product)
-	    ;
+	    apply event 'product-added' (command.product);
 
 	    check invariant 'full' then (
-	    	{
+	    	<{
 	    		apply event 'full';
-	    	}
+	    	}>
 	    );
-	}
+	}>
 );
 
 add handler for command 'change-product-quantity' (
-	{
-    	assert not 'checked-out';
+	<{
+    	assert invariant not 'checked-out';
+    	assert invariant 'product-exists' (command.product_id); 
 
-    	assert 'product-exists' (product_id) 
-    		as (command.product.id)
-    	;
-
-    	apply event 'product-quantity-changed' (product_id, quantity) 
-    		as (command.product_id, command.quantity)
-    	;
-	}
+    	apply event 'product-quantity-changed' (command.product_id, command.quantity); 
+	}>
 );
 
 add handler for command 'remove-product' (
-	{
-	    assert not 'checked-out';
-
-	    assert 'product-exists' (product_id) 
-	    	with (command.product.id)
-	    ;
+	<{
+	    assert invariant not 'checked-out';
+	    assert invariant 'product-exists' (command.product_id);
 
 	    apply event 'product-removed' (product_id) 
 	    	as (command.product_id)
 	    ;
 
 		check invariant 'empty' then (
-	    	{
+	    	<{
 	    		apply event 'empty';
-	    	}
+	    	}>
 	    );
-	}
+	}>
 );
 
 add handler for command 'checkout' (
-	{
-    	assert not 'checked-out';
+	<{
+    	assert invariant not 'checked-out';
 
     	apply event 'checked-out';
-	}
+	}>
 );
 
 
