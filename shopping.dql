@@ -19,32 +19,31 @@ create aggregate 'carts' (shopper_id, products, is_created, is_checked_out)
 	defaults (null, empty, false, false)
 ;
 
-# Events
+# Using Aggregate
+
+within aggregate 'carts';
+
+# Events and Handlers
 
 create event 'empty';
 create event 'full';
-
 create event 'created' (shopper_id) as (identifier);
+create event 'checked-out';
+create event 'product-added' (product) as (entity\product);
+create event 'product-quantity-changed' (product_id, quantity) as (identifier, value\quantity);
+create event 'product-removed' (product_id) as (identifier);
 
 add handler for event 'created' as ({
 	set 'is_created' (true);
 });
 
-create event 'checked-out';
-
 add handler for event 'checked-out' as ({
 	set 'is_checked_out' (true);
 });
 
-create event 'product-added' (product) as (entity\product);
-
 add handler for event 'product-added' as ({
 	add to index 'products' (product.id);
 });
-
-create event 'product-quantity-changed' (product_id, quantity) as (identifier, value\quantity);
-
-create event 'product-removed' (product_id) as (identifier);
 
 add handler for event 'product-removed' as ({
 	remove from index 'products' (product.id);
@@ -76,7 +75,7 @@ create invariant 'full' satisfied when ({
 
 create invariant 'product-exists' (product_id) as (identifier) satisfied when ({
 	from aggregate
-		exists in index 'products' (product_id);
+		exists (product_id) in index 'products';
 });
 
 create invariant 'has-one-cart' (shopper_id) as (identifier) satisfied when ({
@@ -88,9 +87,13 @@ create invariant 'has-one-cart' (shopper_id) as (identifier) satisfied when ({
 		greater_than 0;
 });
 
-# Commands
+# Commands and Handlers
 
 create command 'create' (shopper_id) as (identifier);
+create command 'add-product' (product) as (entity\product);
+create command 'change-product-quantity' (product_id, quantity) as (identifier, value\quantity);
+create command 'remove-product' (product_id) as (identifier);
+create command 'checkout';
 
 add handler for command 'create' as ({
 
@@ -100,8 +103,6 @@ add handler for command 'create' as ({
     apply event 'created' (shopper_id) as (command.shopper_id);
     apply event 'empty';
 });
-
-create command 'add-product' (product) as (entity\product);
 
 add handler for command 'add-product' as ({
 
@@ -116,8 +117,6 @@ add handler for command 'add-product' as ({
     });
 });
 
-create command 'change-product-quantity' (product_id, quantity) as (identifier, value\quantity);
-
 add handler for command 'change-product-quantity' as ({
 
     assert not 'checked-out';
@@ -126,8 +125,6 @@ add handler for command 'change-product-quantity' as ({
     apply event 'product-quantity-changed' (product_id, quantity) as (command.product_id, command.quantity);
 });
 
-create command 'remove-product' (product_id) as (identifier);
-
 add handler for command 'remove-product' as ({
 
     assert not 'checked-out';
@@ -135,8 +132,6 @@ add handler for command 'remove-product' as ({
 
     apply event 'product-removed' (product_id) as (command.product_id);
 });
-
-create command 'checkout';
 
 add handler for command 'checkout' as ({
 
