@@ -181,13 +181,20 @@ You will most likely want to define many things in a context at a time. To save 
 
 # Aggregates
 
+Aggregates are bite-sized domain models for a particular context. They handle commands from the application, assert/check business invariants, and produce events. Every command handled by an aggregate is done so as a transaction. Every aggregate contains a root entity (which may just be an identifier). 
+
+The identifier of the root entity is the identifier of the aggregate. Other entities and values can then be associated with that root entity. but may not be referenced externally to the aggregate.
+
+As an example take a carts aggregate in the context of shopping.
+
+
 ### Creating aggregates
 
 To create a new aggregate, simply run the following statement:
 
-	create aggregate 'cart' (id, shopper_id, items)
-		as (core\value\identifier, core\value\identifier, core\value\index) 
-		defaults (null, null, empty)
+	create aggregate 'cart' (id, shopper_id, items, is_created, is_checked_out)
+		as (identifier, identifier, index, boolean, boolean) 
+		defaults (null, null, empty, false, false)
 		in context 'shopping' 
 		for domain 'e-commerce' 
 		using environment 'release-0.8.13'
@@ -201,8 +208,8 @@ Remember that you can run the _in_ statement at the beginning, or at any point i
 	.
 	.
 
-	create aggregate 'cart' (id, shopper_id, items) 
-		as (core\value\identifier, core\value\identifier, core\value\index) 
+	create aggregate 'cart' (id, shopper_id, items, is_created, is_checked_out) 
+		as (identifier, identifier, index, boolean, boolean) 
 		defaults (null, null, empty)
 	;
 
@@ -229,7 +236,7 @@ To create an aggregate command, run the following statement:
 	in context 'shopping';
 	for aggregate 'carts';
 
-	create command 'create' (id, shopper_id) as (core\value\identifier, core\value\identifier);
+	create command 'create' (id, shopper_id) as (identifier, identifier);
 
 ##### Renaming aggregate commands
 
@@ -267,13 +274,12 @@ You can create a aggregate command handler by running the following statement:
 	for domain 'e-commerce';
 	in context 'shopping';
 
-	add command handler (create) to 'special-offers' as ({
+	add command handler 'create' to 'special-offers' as ({
 
-		assert not 'created';
+		assert not created;
 
-		set created = 1;
+		set created = true;
 		set cart = command\cart;
-
 	});
 
 ##### Altering command handlers
@@ -284,7 +290,7 @@ You can alter a aggregate command handler by running the following statement:
 	for domain 'e-commerce';
 	in context 'shopping';
 
-	alter command handler (created) within 'special-offers' as ({
+	alter command handler 'create' within 'special-offers' as ({
 
 		.
 		. # new invariants and setters
@@ -320,9 +326,20 @@ An invariant enforces rules based on the current state of the current context.
 
 ### Creating invariants
 
-To create a new projection simply run the following statement:
+To create a new invariant simply run the following statement:
 
-	create invariant 'shopper-has-active-cart' in context 'shopping' for domain 'e-commerce' using environment 'release-0.8.13';
+	create invariant 'shopper-has-active-cart' (shopper_id) as (identifier)
+		in context 'shopping' 
+		for domain 'e-commerce' 
+		using environment 'release-0.8.13'
+		satisfed when ({
+			count 
+			where carts.shopper_id = shopper_id
+				and carts.is_created = true 
+				and carts.is_checked_out = false
+			greater_than 0;
+		})
+	;
 
 Remember that you can run the _in_ statement at the beginning, or at any point in a DQL file. You can do that as follows:
 
