@@ -120,61 +120,53 @@ create command 'remove-product' (product_id) as (identifier);
 create command 'checkout';
 
 add handler for command 'create' (
-	<{
+	{
 		assert invariant not 'created';
 		assert invariant 'has-one-cart' (command.shopper_id);
 
 		apply event 'created' (command.shopper_id); 
 		apply event 'empty';
-	}>
+	}
 );
 
 add handler for command 'add-product' (
-	<{
+	{
 		assert invariant not 'checked-out';
 		assert invariant not 'full';
 		assert invariant not 'product-exists' (command.product.id);
 
 		apply event 'product-added' (command.product);
 
-		check invariant 'full' then (
-			<{
-				apply event 'full';
-			}>
-		);
-	}>
+		apply event 'full' assuming invariant 'full';
+	}
 );
 
 add handler for command 'change-product-quantity' (
-	<{
+	{
 		assert invariant not 'checked-out';
 		assert invariant 'product-exists' (command.product_id); 
 
 		apply event 'product-quantity-changed' (command.product_id, command.quantity); 
-	}>
+	}
 );
 
 add handler for command 'remove-product' (
-	<{
+	{
 		assert invariant not 'checked-out';
 		assert invariant 'product-exists' (command.product_id);
 
 		apply event 'product-removed' (command.product_id);
 
-		check invariant 'empty' then (
-			<{
-				apply event 'empty';
-			}>
-		);
-	}>
+		apply event 'empty' assuming invariant 'empty';
+	}
 );
 
 add handler for command 'checkout' (
-	<{
+	{
 		assert invariant not 'checked-out';
 
 		apply event 'checked-out';
-	}>
+	}
 );
 
 
