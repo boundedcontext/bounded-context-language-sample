@@ -119,50 +119,81 @@ create command 'change-product-quantity' (product_id, quantity) as (identifier, 
 create command 'remove-product' (product_id) as (identifier);
 create command 'checkout';
 
-add handler for command 'create' as ({
+add handler for command 'create' (
+	<{
+	    assert invariant not 'created';
+	    assert invariant 'has-one-cart';
 
-    assert not 'created';
-    assert 'has-one-cart';
+	    apply event 'created' (shopper_id) 
+	    	as (command.shopper_id)
+	    ;
 
-    apply event 'created' (shopper_id) as (command.shopper_id);
-    apply event 'empty';
-});
+	    apply event 'empty';
+	}>
+);
 
-add handler for command 'add-product' as ({
+add handler for command 'add-product' (
+	{
+	    assert invariant not 'checked-out';
+	    assert invariant not 'full';
 
-    assert not 'checked-out';
-    assert not 'full';
-    assert not 'product-exists' (product_id) as (command.product.id);
+	    assert invariant not 'product-exists' (product_id) 
+	    	as (command.product.id)
+	    ;
 
-    apply event 'product-added' (product) as (command.product);
+	    apply event 'product-added' (product) 
+	    	as (command.product)
+	    ;
 
-    check 'full' then ({
-    	apply event 'full';
-    });
-});
+	    check invariant 'full' then (
+	    	{
+	    		apply event 'full';
+	    	}
+	    );
+	}
+);
 
-add handler for command 'change-product-quantity' as ({
+add handler for command 'change-product-quantity' (
+	{
+    	assert not 'checked-out';
 
-    assert not 'checked-out';
-    assert 'product-exists' (product_id) as (command.product.id);
+    	assert 'product-exists' (product_id) 
+    		as (command.product.id)
+    	;
 
-    apply event 'product-quantity-changed' (product_id, quantity) as (command.product_id, command.quantity);
-});
+    	apply event 'product-quantity-changed' (product_id, quantity) 
+    		as (command.product_id, command.quantity)
+    	;
+	}
+);
 
-add handler for command 'remove-product' as ({
+add handler for command 'remove-product' (
+	{
+	    assert not 'checked-out';
 
-    assert not 'checked-out';
-    assert 'product-exists' (product_id) as (command.product.id);
+	    assert 'product-exists' (product_id) 
+	    	with (command.product.id)
+	    ;
 
-    apply event 'product-removed' (product_id) as (command.product_id);
-});
+	    apply event 'product-removed' (product_id) 
+	    	as (command.product_id)
+	    ;
 
-add handler for command 'checkout' as ({
+		check invariant 'empty' then (
+	    	{
+	    		apply event 'empty';
+	    	}
+	    );
+	}
+);
 
-    assert not 'checked-out';
+add handler for command 'checkout' (
+	{
+    	assert not 'checked-out';
 
-    apply event 'checked-out';
-});
+    	apply event 'checked-out';
+	}
+);
 
 
 
