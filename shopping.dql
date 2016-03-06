@@ -12,7 +12,7 @@ using environment 'develop-0.0.1';
 for domain 'e-commerce';
 in context 'shopping';
 
-# Aggregate
+# Cart Aggregate
 
 create aggregate 'carts' (shopper_id, products, is_created, is_checked_out)
 	as (identifier, identifier, index, boolean, boolean) 
@@ -27,13 +27,13 @@ create event 'full';
 create event 'created' (shopper_id) as (identifier);
 
 add handler for event 'created' as ({
-	set is_created = true;
+	set 'is_created' (true);
 });
 
 create event 'checked-out';
 
 add handler for event 'checked-out' as ({
-	set is_checked_out = true;
+	set 'is_checked_out' (true);
 });
 
 create event 'product-added' (product) as (entity\product);
@@ -53,37 +53,39 @@ add handler for event 'product-removed' as ({
 # Invariants
 
 create invariant 'created' satisfied when ({
-	from aggregate where is_created = true;
+	from aggregate
+		where is_created = true;
 });
 
 create invariant 'checked-out' satisfied when ({
-	from aggregate where is_checked_out = true;
+	from aggregate
+		where is_checked_out = true;
 });
 
 create invariant 'empty' satisfied when ({
 	from aggregate
-	count items
-	equals 0;
+		count in index 'products'
+		equals 0;
 });
 
 create invariant 'full' satisfied when ({
 	from aggregate
-	count items
-	equals 10;
+		count in index 'products'
+		equals 10;
 });
 
 create invariant 'product-exists' (product_id) as (identifier) satisfied when ({
 	from aggregate
-	exists product_id in items;
+		exists in index 'products' (product_id);
 });
 
 create invariant 'has-one-cart' (shopper_id) as (identifier) satisfied when ({
 	from all
-	count
-	where shopper_id = shopper_id
-		and is_created = true
-		and is_checked_out = true
-	greater_than 0;
+		count
+		where shopper_id = shopper_id
+			and is_created = true
+			and is_checked_out = true
+		greater_than 0;
 });
 
 # Commands
