@@ -15,7 +15,7 @@ in context 'shopping';
 # Cart Aggregate
 
 create aggregate 'carts' (shopper_id, products, is_created, is_checked_out)
-	as (identifier, identifier, index, boolean, boolean) 
+	as (identifier, index, boolean, boolean) 
 	defaults (null, empty, false, false)
 ;
 
