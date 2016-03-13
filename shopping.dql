@@ -1,35 +1,83 @@
 
 # Create Environment, Domain and Context
 
-create environment 'develop-0.0.1';
+create environment 'develop-0.0.1' then using environment 'develop-0.0.1';
+create domain 'e-commerce' then for domain 'e-commerce';
+create context 'shopping' then in context 'shopping';
 
-create domain 'e-commerce' using environment 'develop-0.0.1';
-create context 'shopping' for domain 'e-commerce' using environment 'develop-0.0.1';
+# Value Objects and Entities
 
-# Using Environment, Domain and Context
+create value 'quantity' validated by (
+	<:
+		from value
+		check quantity > 0 and quantity < 100
+	:>
+);
 
-using environment 'develop-0.0.1';
-for domain 'e-commerce';
-in context 'shopping';
+create entity 'product' (id, quantity) as (identifier, value\quantity);
 
-create aggregate 'carts' (shopper_id, product_count, is_created, is_checked_out)
-	as (identifier, integer, boolean, boolean) 
-	defaults (null, 0, false, false)
-;
+# Aggregates
 
-within aggregate 'carts';
-
-create index 'products';
+create aggregate 'carts' then within aggregate 'carts';
 
 # Events
 
+create counter 'products_count' defaults (0);
+
 create event 'empty';
+
+create invariant 'empty' satisfied by (
+	<:
+		from aggregate
+		check products_count == 0
+	:>
+);
+
 create event 'full';
+
+create invariant 'full' satisfied by (
+	<:
+		from aggregate
+		check products_count == 10
+	:>
+);
+
+create identifier 'shopper' defaults (null);
+
+create invariant 'has-one-cart' (shopper_id) as (identifier) satisfied by (
+	<:
+		from all
+			count as cart_count
+		where shopper_id == shopper_id
+			and is_created == true
+			and is_checked_out == true
+		check cart_count > 0
+	:>
+);
+
+create boolean 'is_created' defaults (false);
+
+create invariant 'created' satisfied by (
+	<:
+		from aggregate
+		check is_created == true
+	:>
+);
 
 create event 'created' (shopper_id) as (identifier) handled by (
 	<:
 		update aggregate
 			set 'is_created' = true
+			set 'shopper' = shopper_id
+	:>
+);
+
+create boolean 'is_checked_out' defaults (false);
+
+create invariant 'checked-out' satisfied by (
+	<:
+		from aggregate
+		check is_checked_out == true
 	:>
 );
 
@@ -37,6 +85,15 @@ create event 'checked-out' handled by (
 	<:
 		update aggregate
 			set 'is_checked_out' = true
+	:>
+);
+
+create index 'products';
+
+create invariant 'product-exists' (product_id) as (identifier) satisfied by (
+	<:
+		from 'aggregate'
+		check exists in index 'products' (product_id)
 	:>
 );
 
@@ -48,8 +105,6 @@ create event 'product-added' (product) as (entity\product) handled by (
 	:>
 );
 
-create event 'product-quantity-changed' (product_id, quantity) as (identifier, value\quantity);
-
 create event 'product-removed' (product_id) as (identifier) handled by (
 	<:
 		update aggregate
@@ -58,53 +113,7 @@ create event 'product-removed' (product_id) as (identifier) handled by (
 	:>
 );
 
-# Invariants
-
-create invariant 'created' satisfied by (
-	<:
-		from aggregate
-		check is_created == true
-	:>
-);
-
-create invariant 'checked-out' satisfied by (
-	<:
-		from aggregate
-		check is_checked_out == true
-	:>
-);
-
-create invariant 'empty' satisfied by (
-	<:
-		from aggregate
-		check product_count == 0
-	:>
-);
-
-create invariant 'full' satisfied by (
-	<:
-		from aggregate
-		check product_count == 10
-	:>
-);
-
-create invariant 'product-exists' (product_id) as (identifier) satisfied by (
-	<:
-		from aggregate
-		check exists in index 'products' (product_id)
-	:>
-);
-
-create invariant 'has-one-cart' (shopper_id) as (identifier) satisfied by (
-	<:
-		from all
-			count as cart_count
-		where shopper_id = shopper_id
-			and is_created = true
-			and is_checked_out = true
-		check cart_count > 0
-	:>
-);
+create event 'product-quantity-changed' (product_id, quantity) as (identifier, value\quantity);
 
 # Commands
 
