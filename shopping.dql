@@ -9,8 +9,8 @@ create context 'shopping' then in context 'shopping';
 
 create value 'quantity' validated by (
 	<:
-		from value
-		check quantity > 0 and quantity < 100
+		check value > 0
+			and value < 100
 	:>
 );
 
@@ -20,11 +20,7 @@ create entity 'product' (id, quantity) as (identifier, value\quantity);
 
 create aggregate 'carts' then within aggregate 'carts';
 
-# Events
-
 create counter 'products_count' defaults (0);
-
-create event 'empty';
 
 create invariant 'empty' satisfied by (
 	<:
@@ -33,7 +29,7 @@ create invariant 'empty' satisfied by (
 	:>
 );
 
-create event 'full';
+create event 'empty';
 
 create invariant 'full' satisfied by (
 	<:
@@ -42,9 +38,11 @@ create invariant 'full' satisfied by (
 	:>
 );
 
+create event 'full';
+
 create identifier 'shopper' defaults (null);
 
-create invariant 'has-one-cart' (shopper_id) as (identifier) satisfied by (
+create invariant 'shopper-has-one-active-cart' (shopper_id) as (identifier) satisfied by (
 	<:
 		from all
 			count as cart_count
