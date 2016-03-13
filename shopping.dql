@@ -12,16 +12,51 @@ using environment 'develop-0.0.1';
 for domain 'e-commerce';
 in context 'shopping';
 
-# Cart Aggregate
-
-create aggregate 'carts' (shopper_id, products, is_created, is_checked_out)
-	as (identifier, index, boolean, boolean) 
-	defaults (null, empty, false, false)
+create aggregate 'carts' (shopper_id, product_count, is_created, is_checked_out)
+	as (identifier, integer, boolean, boolean) 
+	defaults (null, 0, false, false)
 ;
 
-# Using Aggregate
-
 within aggregate 'carts';
+
+create index 'products';
+
+# Events
+
+create event 'empty';
+create event 'full';
+
+create event 'created' (shopper_id) as (identifier) handled by (
+	<:
+		update aggregate
+			set 'is_created' = true
+	:>
+);
+
+create event 'checked-out' handled by (
+	<:
+		update aggregate
+			set 'is_checked_out' = true
+	:>
+);
+
+create event 'product-added' (product) as (entity\product) handled by (
+	<:
+		update aggregate
+			increment 'product_count'
+			add to index 'products' (product.id)
+	:>
+);
+
+create event 'product-quantity-changed' (product_id, quantity) as (identifier, value\quantity);
+
+create event 'product-removed' (product_id) as (identifier) handled by (
+	<:
+		update aggregate
+			decrement 'product_count'
+			remove product.id from index 'products'
+	:>
+);
 
 # Invariants
 
@@ -42,7 +77,6 @@ create invariant 'checked-out' satisfied by (
 create invariant 'empty' satisfied by (
 	<:
 		from aggregate
-		count index 'products' as product_count
 		check product_count == 0
 	:>
 );
@@ -50,7 +84,6 @@ create invariant 'empty' satisfied by (
 create invariant 'full' satisfied by (
 	<:
 		from aggregate
-		count index 'products' as product_count
 		check product_count == 10
 	:>
 );
@@ -58,14 +91,14 @@ create invariant 'full' satisfied by (
 create invariant 'product-exists' (product_id) as (identifier) satisfied by (
 	<:
 		from aggregate
-		check exists product_id in index 'products'
+		check exists in index 'products' (product_id)
 	:>
 );
 
 create invariant 'has-one-cart' (shopper_id) as (identifier) satisfied by (
 	<:
 		from all
-		count as cart_count
+			count as cart_count
 		where shopper_id = shopper_id
 			and is_created = true
 			and is_checked_out = true
@@ -73,100 +106,53 @@ create invariant 'has-one-cart' (shopper_id) as (identifier) satisfied by (
 	:>
 );
 
-# Events and Handlers
+# Commands
 
-create event 'empty';
-create event 'full';
-create event 'created' (shopper_id) as (identifier);
-create event 'checked-out';
-create event 'product-added' (product) as (entity\product);
-create event 'product-quantity-changed' (product_id, quantity) as (identifier, value\quantity);
-create event 'product-removed' (product_id) as (identifier);
-  
-add handler for event 'created' (
-	<:
-		update aggregate
-		set 'is_created' = true
-	:>
-);
-
-add handler for event 'checked-out' (
-	<:
-		update aggregate
-		set 'is_checked_out' = true
-	:>
-);
-
-add handler for event 'product-added' (
-	<:
-		update aggregate
-		add product.id to index 'products'
-	:>
-);
-
-add handler for event 'product-removed' (
-	<:
-		update aggregate
-		remove product.id from index 'products'
-	:>
-);
-
-# Commands and Handlers
-
-create command 'create' (shopper_id) as (identifier);
-create command 'add-product' (product) as (entity\product);
-create command 'change-product-quantity' (product_id, quantity) as (identifier, value\quantity);
-create command 'remove-product' (product_id) as (identifier);
-create command 'checkout';
-
-add handler for command 'create' (
-	{
+create command 'create' (shopper_id) as (identifier) handled by (
+	<{
 		assert invariant not 'created';
 		assert invariant 'has-one-cart' (command.shopper_id);
 
 		apply event 'created' (command.shopper_id); 
 		apply event 'empty';
-	}
+	}>
 );
 
-add handler for command 'add-product' (
-	{
+create command 'add-product' (product) as (entity\product) handled by (
+	<{
 		assert invariant not 'checked-out';
 		assert invariant not 'full';
 		assert invariant not 'product-exists' (command.product.id);
 
 		apply event 'product-added' (command.product);
-
 		apply event 'full' assuming invariant 'full';
-	}
+	}>
 );
 
-add handler for command 'change-product-quantity' (
-	{
+create command 'change-product-quantity' (product_id, quantity) as (identifier, value\quantity) handled by (
+	<{
 		assert invariant not 'checked-out';
 		assert invariant 'product-exists' (command.product_id); 
 
 		apply event 'product-quantity-changed' (command.product_id, command.quantity); 
-	}
+	}>
 );
 
-add handler for command 'remove-product' (
-	{
+create command 'remove-product' (product_id) as (identifier) handled by (
+	<{
 		assert invariant not 'checked-out';
 		assert invariant 'product-exists' (command.product_id);
 
 		apply event 'product-removed' (command.product_id);
 
 		apply event 'empty' assuming invariant 'empty';
-	}
+	}>
 );
 
-add handler for command 'checkout' (
-	{
-		assert invariant not 'checked-out';
-
-		apply event 'checked-out';
-	}
+create command 'checkout' handled by (
+	<{
+		apply event 'checked-out' assuming invariant not 'checked-out';
+	}>
 );
 
 
