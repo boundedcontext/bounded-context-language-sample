@@ -20,38 +20,7 @@ create entity 'product' (id, quantity) as (identifier, value\quantity);
 
 create aggregate 'carts' then within aggregate 'carts';
 
-create counter 'products_count' defaults (0);
-
-create invariant 'empty' satisfied by (
-	<:
-		from aggregate
-		check products_count == 0
-	:>
-);
-
-create event 'empty';
-
-create invariant 'full' satisfied by (
-	<:
-		from aggregate
-		check products_count == 10
-	:>
-);
-
-create event 'full';
-
 create identifier 'shopper' defaults (null);
-
-create invariant 'shopper-has-one-active-cart' (shopper_id) as (identifier) satisfied by (
-	<:
-		from all
-			count as cart_count
-		where shopper_id == shopper_id
-			and is_created == true
-			and is_checked_out == true
-		check cart_count > 0
-	:>
-);
 
 create boolean 'is_created' defaults (false);
 
@@ -85,6 +54,37 @@ create event 'checked-out' handled by (
 			set 'is_checked_out' = true
 	:>
 );
+
+create invariant 'shopper-has-one-active-cart' (shopper_id) as (identifier) satisfied by (
+	<:
+		from all
+			count as cart_count
+		where shopper_id == shopper_id
+			and is_created == true
+			and is_checked_out == true
+		check cart_count > 0
+	:>
+);
+
+create counter 'products_count' defaults (0);
+
+create invariant 'empty' satisfied by (
+	<:
+		from aggregate
+		check products_count == 0
+	:>
+);
+
+create event 'empty' applies when invariant 'empty' is true;
+
+create invariant 'full' satisfied by (
+	<:
+		from aggregate
+		check products_count == 10
+	:>
+);
+
+create event 'full';
 
 create index 'products';
 
