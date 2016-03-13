@@ -20,8 +20,6 @@ create entity 'product' (id, quantity) as (identifier, value\quantity);
 
 create aggregate 'carts' then within aggregate 'carts';
 
-create identifier 'shopper' defaults (null);
-
 create boolean 'is_created' defaults (false);
 
 create invariant 'created' satisfied by (
@@ -30,6 +28,8 @@ create invariant 'created' satisfied by (
 		check is_created == true
 	:>
 );
+
+create identifier 'shopper' defaults (null);
 
 create event 'created' (shopper_id) as (identifier) handled by (
 	<:
