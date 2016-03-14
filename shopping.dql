@@ -133,7 +133,6 @@ within aggregate 'carts':
 };
 
 # Commands
-
 within aggregate 'carts':
 {
 	create command 'create' (shopper_id) as (identifier) handled by (
@@ -175,10 +174,10 @@ within aggregate 'carts':
 
 	create command 'checkout' handled by (
 		<{
-			apply event 'checked-out' assuming invariant not 'checked-out';
+			assert invariant not 'checked-out';
+
+			apply event 'checked-out';
 		}>
 	);
 };
-
-
 
