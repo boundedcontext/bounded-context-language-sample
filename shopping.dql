@@ -103,13 +103,13 @@ within aggregate 'carts':
 
 within aggregate 'carts':
 {
-	create invariant 'shopper-has-one-active-cart' (shopper_id) as (identifier) satisfied by (
+	create invariant 'shopper-has-active-cart' (shopper_id) as (identifier) satisfied by (
 		<:
 			from all
 				count as cart_count
 			where shopper_id == shopper_id
 				and is_created == true
-				and is_checked_out == true
+				and is_checked_out == false
 			check cart_count > 0
 		:>
 	);
@@ -138,7 +138,7 @@ within aggregate 'carts':
 	create command 'create' (shopper_id) as (identifier) handled by (
 		<{
 			assert invariant not 'created';
-			assert invariant 'has-one-cart' (command.shopper_id);
+			assert invariant not 'shopper-has-active-cart' (command.shopper_id);
 
 			apply event 'created' (command.shopper_id);
 		}>
