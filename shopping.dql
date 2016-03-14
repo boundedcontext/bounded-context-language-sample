@@ -89,6 +89,8 @@ within aggregate 'carts':
 		:>
 	);
 
+	create event 'empty';
+
 	create invariant 'full' satisfied by (
 		<:
 			from aggregate
