@@ -75,7 +75,7 @@ create invariant 'empty' satisfied by (
 	:>
 );
 
-create event 'empty' applies when invariant 'empty' is true;
+create event 'empty';
 
 create invariant 'full' satisfied by (
 	<:
