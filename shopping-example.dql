@@ -61,3 +61,19 @@ dispatch command 'checkout'
 ;
 # produces events 'checked-out'
 
+
+<:
+	stream
+		after '3a97e3ea-4781-4c33-92bf-3b3f10cdcce0'
+		chunk size 1000
+		limit 1000
+:>
+
+create application 'android';
+
+create projection 'carts' (shopper_id, )
+
+
+
+
+
