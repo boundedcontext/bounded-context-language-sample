@@ -1,9 +1,0 @@
-<# domain ECommerce\Shopping\ValueObject;
-
-use Core\ValueObject\Single;
-use Core\ValueObject\Composite\Index;
-
-create Quantity : Single;
-create ProductIndex : Index;
-
-#>
